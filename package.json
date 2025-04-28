@@ -1,0 +1,50 @@
+{
+  "name": "vtex-io-app-template",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "lint": "eslint --ext js,jsx,ts,tsx .",
+    "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
+    "lint:locales": "intl-equalizer",
+    "postinstall": "yarn --cwd react & yarn --cwd node && node ./setup.mjs"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged",
+      "post-merge": "yarn"
+    }
+  },
+  "intl-equalizer": {
+    "referenceLocale": "en",
+    "localeDirectory": "messages"
+  },
+  "lint-staged": {
+    "*.{ts,js,tsx,jsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,graphql,gql}": [
+      "prettier --write"
+    ],
+    "messages/*.json": [
+      "yarn lint:locales"
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@vtex/danger": "^0.2.7",
+    "@vtex/intl-equalizer": "^2.5.0",
+    "@vtex/prettier-config": "^0.3.6",
+    "eslint": "^7.16.0",
+    "eslint-config-vtex": "^12.9.3",
+    "eslint-config-vtex-react": "^6.8.3",
+    "husky": "^4.3.6",
+    "inquirer": "^12.6.0",
+    "lint-staged": "^10.5.3",
+    "prettier": "^2.2.1",
+    "replace-in-file": "^8.3.0",
+    "typescript": "5.5.3"
+  },
+  "dependencies": {},
+  "bin": "./setup.mjs"
+}

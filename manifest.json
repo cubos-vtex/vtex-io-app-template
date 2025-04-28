@@ -1,0 +1,109 @@
+{
+  "name": "<APP_NAME>",
+  "vendor": "<APP_VENDOR>",
+  "version": "0.0.0",
+  "title": "<APP_TITLE>",
+  "description": "<APP_DESCRIPTION>",
+  "categories": [],
+  "dependencies": {
+    "vtex.order-manager": "0.x",
+    "vtex.order-items": "0.x",
+    "vtex.styleguide": "9.x",
+    "vtex.formatted-price": "0.x",
+    "vtex.checkout-graphql": "0.x",
+    "vtex.store": "2.x",
+    "vtex.rich-text": "0.x",
+    "vtex.flex-layout": "0.x",
+    "vtex.css-handles": "0.x",
+    "vtex.checkout-resources": "0.x",
+    "vtex.b2b-organizations-graphql": "0.x",
+    "vtex.shipping-estimate-translator": "2.x",
+    "vtex.store-graphql": "2.x",
+    "vtex.storefront-permissions": "1.x",
+    "vtex.storefront-permissions-ui": "1.x",
+    "vtex.search-graphql": "0.x",
+    "vtex.address-form": "4.x",
+    "vtex.country-codes": "2.x",
+    "vtex.session-client": "1.x",
+    "vtex.apps-graphql": "3.x"
+  },
+  "builders": {
+    "docs": "0.x",
+    "messages": "1.x",
+    "node": "7.x",
+    "react": "3.x"
+  },
+  "scripts": {
+    "prereleasy": "bash lint.sh"
+  },
+  "policies": [
+    {
+      "name": "POWER_USER_DS"
+    },
+    {
+      "name": "ADMIN_DS"
+    },
+    {
+      "name": "ADMIN_CRM"
+    },
+    {
+      "name": "POWER_USER_CRM"
+    },
+    {
+      "name": "colossus-fire-event"
+    },
+    {
+      "name": "colossus-write-logs"
+    },
+    {
+      "name": "graphql-query"
+    },
+    {
+      "name": "vbase-read-write"
+    },
+    {
+      "name": "update-app-settings"
+    },
+    {
+      "name": "read-workspace-apps"
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "api.vtex.com",
+        "path": "/api/dataentities/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/dataentities/*"
+      }
+    },
+    {
+      "name": "outbound-access",
+      "attrs": {
+        "host": "portal.vtexcommercestable.com.br",
+        "path": "/api/checkout/*"
+      }
+    }
+  ],
+  "settingsSchema": {
+    "title": "App settings",
+    "type": "object",
+    "properties": {
+      "someProperty": {
+        "title": "Some property",
+        "description": "Property description",
+        "type": "string",
+        "default": ""
+      }
+    }
+  },
+  "billingOptions": {
+    "type": "free",
+    "availableCountries": ["*"]
+  },
+  "$schema": "https://raw.githubusercontent.com/vtex/node-vtex-api/master/gen/manifest.schema"
+}
