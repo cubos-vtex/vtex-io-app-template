@@ -2,11 +2,12 @@
   "name": "vtex-io-app-template",
   "private": true,
   "license": "UNLICENSED",
+  "type": "module",
   "scripts": {
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
     "lint:locales": "intl-equalizer",
-    "postinstall": "yarn --cwd react & yarn --cwd node && node ./setup.mjs"
+    "postinstall": "yarn --cwd react & yarn --cwd node && node ./setup.js"
   },
   "husky": {
     "hooks": {
@@ -46,7 +47,5 @@
     "typescript": "5.5.3"
   },
   "dependencies": {},
-  "bin": {
-    "vtex-io-app-template": "./setup.mjs"
-  }
+  "bin": "./setup.js"
 }
