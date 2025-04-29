@@ -7,8 +7,7 @@
   "scripts": {
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
-    "lint:locales": "intl-equalizer",
-    "postinstall": "yarn --cwd react & yarn --cwd node && node ./setup.js"
+    "lint:locales": "intl-equalizer"
   },
   "husky": {
     "hooks": {
