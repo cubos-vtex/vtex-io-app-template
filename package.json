@@ -46,5 +46,7 @@
     "typescript": "5.5.3"
   },
   "dependencies": {},
-  "bin": "./setup.mjs"
+  "bin": {
+    "vtex-io-app-template": "./setup.mjs"
+  }
 }
