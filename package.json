@@ -1,13 +1,11 @@
 {
-  "name": "vtex-io-app-template",
-  "version": "0.0.1",
   "private": true,
   "license": "UNLICENSED",
-  "type": "module",
   "scripts": {
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx,json}\"",
-    "lint:locales": "intl-equalizer"
+    "lint:locales": "intl-equalizer",
+    "postinstall": "yarn --cwd react & yarn --cwd node"
   },
   "husky": {
     "hooks": {
@@ -43,10 +41,5 @@
     "lint-staged": "^10.5.3",
     "prettier": "^2.2.1",
     "typescript": "5.5.3"
-  },
-  "dependencies": {
-    "inquirer": "^12.6.0",
-    "replace-in-file": "^8.3.0"
-  },
-  "bin": "./setup.js"
+  }
 }
