@@ -1,0 +1,10 @@
+{
+  "store.list-repositories": {
+    "children": ["list-repositories"]
+  },
+  "list-repositories": {
+    "props": {
+      "org": "cubos-vtex"
+    }
+  }
+}

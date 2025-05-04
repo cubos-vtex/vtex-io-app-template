@@ -1,0 +1,5 @@
+{
+  "store.list-repositories": {
+    "path": "/<APP_NAME>/list-repositories"
+  }
+}

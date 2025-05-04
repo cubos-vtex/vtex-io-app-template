@@ -1,13 +1,13 @@
 {
-  "memory": 256,
-  "ttl": 10,
-  "timeout": 2,
+  "memory": 1024,
+  "ttl": 60,
+  "timeout": 60,
   "minReplicas": 2,
-  "maxReplicas": 4,
-  "workers": 1,
+  "maxReplicas": 60,
+  "workers": 4,
   "routes": {
-    "setAffiliateOrderForm": {
-      "path": "/_v/affiliates-session-transformer/session/transform",
+    "getRepositoriesByOrg": {
+      "path": "/_v/<APP_NAME>/get-repositories-by-org/:org",
       "public": true
     }
   }

@@ -1,3 +1,25 @@
 {
-  "store/some-message": "Algún mensaje"
+  "admin/editor.list-repositories.title": "Lista de Repositorios",
+  "admin/editor.list-repositories.description": "Muestra la lista de repositorios de una organización de GitHub",
+  "admin/editor.list-repositories.props.org.title": "Organización en GitHub",
+  "admin/editor.list-repositories.props.org.description": "Usuario de la organización en GitHub",
+
+  "store/list-repositories.input.label": "Busca una cuenta de organización de GitHub para listar sus repositorios",
+  "store/list-repositories.input.placeholder": "Ingresa una cuenta de organización de GitHub",
+  "store/list-repositories.input.button.label": "Buscar",
+
+  "store/list-repositories.title": "Repositorios de {org} ({count})",
+  "store/list-repositories.empty.label": "No se encontraron repositorios.",
+
+  "store/list-repositories.sort.placeholder": "Ordenar por",
+  "store/list-repositories.sort.name.label": "Nombre",
+  "store/list-repositories.sort.created.label": "Fecha de creación",
+  "store/list-repositories.sort.updated.label": "Última actualización",
+  "store/list-repositories.sort.pushed.label": "Último push",
+
+  "store/list-repositories.direction.placeholder": "Dirección",
+  "store/list-repositories.direction.asc.label": "Ascendente",
+  "store/list-repositories.direction.desc.label": "Descendente",
+
+  "store/list-repositories.sort-direction.button.label": "Actualizar"
 }

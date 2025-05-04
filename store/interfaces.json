@@ -1,0 +1,8 @@
+{
+  "store.list-repositories": {
+    "allowed": "*"
+  },
+  "list-repositories": {
+    "component": "ListRepositories"
+  }
+}

@@ -1,3 +1,25 @@
 {
-  "store/some-message": "Some message"
+  "admin/editor.list-repositories.title": "Repository List",
+  "admin/editor.list-repositories.description": "Shows the list of repositories of a GitHub organization",
+  "admin/editor.list-repositories.props.org.title": "GitHub Organization",
+  "admin/editor.list-repositories.props.org.description": "GitHub organization user",
+
+  "store/list-repositories.input.label": "Search for a GitHub organization account to list its repositories",
+  "store/list-repositories.input.placeholder": "Insert a GitHub organization account",
+  "store/list-repositories.input.button.label": "Search",
+
+  "store/list-repositories.title": "Repositories from {org} ({count})",
+  "store/list-repositories.empty.label": "No repositories found.",
+
+  "store/list-repositories.sort.placeholder": "Sort by",
+  "store/list-repositories.sort.name.label": "Name",
+  "store/list-repositories.sort.created.label": "Creation date",
+  "store/list-repositories.sort.updated.label": "Last up,date",
+  "store/list-repositories.sort.pushed.label": "Last push",
+
+  "store/list-repositories.direction.placeholder": "Direction",
+  "store/list-repositories.direction.asc.label": "Ascending",
+  "store/list-repositories.direction.desc.label": "Descending",
+
+  "store/list-repositories.sort-direction.button.label": "Update"
 }
