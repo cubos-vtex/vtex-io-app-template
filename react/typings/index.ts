@@ -12,14 +12,31 @@ export type ApitRequestInput = {
   body?: Record<string, unknown> | string
 }
 
-export type RepositoriesData = ApiResponse & {
-  org: {
-    name: string
-    avatarUrl?: string
-  }
-  repositories: Array<{
-    name: string
-    description: string
-    url: string
-  }>
+export type GitHubOrganization = {
+  name: string
+  avatarUrl?: string
+}
+
+export type GitHubRepository = {
+  name: string
+  description: string
+  url: string
+}
+
+export type GitHubOrganizationRepositories = {
+  org: GitHubOrganization
+  repositories: GitHubRepository[]
+}
+
+export type GitHubRepositoriesApiResponse = ApiResponse &
+  GitHubOrganizationRepositories
+
+export type GetGitHubRepositoriesQuery = {
+  getGitHubRepositoriesByOrg: GitHubOrganizationRepositories
+}
+
+export type GetGitHubRepositoriesArgs = {
+  org: string
+  sort?: string
+  direction?: string
 }

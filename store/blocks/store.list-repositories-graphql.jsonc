@@ -1,0 +1,10 @@
+{
+  "store.list-repositories-graphql": {
+    "children": ["list-repositories-graphql"]
+  },
+  "list-repositories-graphql": {
+    "props": {
+      "defaultOrg": "cubos-vtex"
+    }
+  }
+}

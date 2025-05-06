@@ -1,5 +1,8 @@
 {
   "store.list-repositories": {
     "path": "/<APP_NAME>/list-repositories"
+  },
+  "store.list-repositories-graphql": {
+    "path": "/<APP_NAME>/list-repositories-graphql"
   }
 }

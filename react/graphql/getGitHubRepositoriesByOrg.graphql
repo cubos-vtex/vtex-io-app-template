@@ -1,0 +1,13 @@
+query GetGitHubRepositoriesByOrg($org: ID!, $sort: String, $direction: String) {
+  getGitHubRepositoriesByOrg(org: $org, sort: $sort, direction: $direction) {
+    org {
+      name
+      avatarUrl
+    }
+    repositories {
+      name
+      description
+      url
+    }
+  }
+}

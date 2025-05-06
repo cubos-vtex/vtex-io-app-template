@@ -1,0 +1,15 @@
+type GitHubOrganization {
+  name: String!
+  avatarUrl: String
+}
+
+type GitHubRepository {
+  name: String!
+  description: String
+  url: String!
+}
+
+type GitHubOrganizationRepositories {
+  org: GitHubOrganization!
+  repositories: [GitHubRepository]!
+}

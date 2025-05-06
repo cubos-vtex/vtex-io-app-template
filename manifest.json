@@ -29,6 +29,7 @@
   },
   "builders": {
     "docs": "0.x",
+    "graphql": "1.x",
     "messages": "1.x",
     "node": "7.x",
     "react": "3.x",

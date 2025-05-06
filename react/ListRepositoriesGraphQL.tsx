@@ -1,5 +1,5 @@
-import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
+import { useQuery } from 'react-apollo'
 import { useIntl } from 'react-intl'
 import { Alert, Layout, PageBlock, PageHeader, Spinner } from 'vtex.styleguide'
 
@@ -8,38 +8,40 @@ import ListRepositoriesContent from './components/list-repositories/ListReposito
 import ListRepositoriesFilters from './components/list-repositories/ListRepositoriesFilters'
 import ListRepositoriesPageTitle from './components/list-repositories/ListRepositoriesPageTitle'
 import ListRepositoriesSearchInput from './components/list-repositories/ListRepositoriesSearchInput'
-import { apiRequestFactory, withQueryClient } from './service'
-import type { GitHubRepositoriesApiResponse } from './typings'
+import GITHUB_REPOSITORIES_QUERY from './graphql/getGitHubRepositoriesByOrg.graphql'
+import type {
+  GetGitHubRepositoriesArgs,
+  GetGitHubRepositoriesQuery,
+} from './typings'
 import messages from './utils/messages'
 
 type Props = {
   defaultOrg?: string
 }
 
-function ListRepositories({ defaultOrg = '' }: Props) {
+function ListRepositoriesGraphQL({ defaultOrg = '' }: Props) {
   const { formatMessage } = useIntl()
   const { DEFAULT_SORT, DEFAULT_DIRECTION } = useListRepositoriesFilters()
   const [selected, setSelected] = useState(defaultOrg)
   const [inputSort, setInputSort] = useState(DEFAULT_SORT)
-  const [inputDirection, setInputDirection] = useState(DEFAULT_DIRECTION)
+  const [inputDirection, setDirection] = useState(DEFAULT_DIRECTION)
   const [filters, setFilters] = useState({
     sort: DEFAULT_SORT,
     direction: DEFAULT_DIRECTION,
   })
 
-  // Consuming backend route with useQuery hook of @tanstack/react-query.
-  const { data, error, isFetching } = useQuery<
-    GitHubRepositoriesApiResponse,
-    Error
-  >({
-    queryKey: ['repositories', selected, filters],
-    enabled: !!selected,
-    keepPreviousData: true,
-    queryFn: apiRequestFactory({
-      url: `/_v/<APP_NAME>/get-repositories-by-org/${selected}`,
-      query: filters,
-    }),
+  // Consuming backend route with useQuery hook of react-apollo
+  const { data, loading, error } = useQuery<
+    GetGitHubRepositoriesQuery,
+    GetGitHubRepositoriesArgs
+  >(GITHUB_REPOSITORIES_QUERY, {
+    variables: {
+      org: selected,
+      ...filters,
+    },
   })
+
+  const orgData = data?.getGitHubRepositoriesByOrg
 
   return (
     <form
@@ -61,14 +63,14 @@ function ListRepositories({ defaultOrg = '' }: Props) {
                 <div className="mb6">
                   <ListRepositoriesSearchInput
                     selected={selected}
-                    loading={isFetching}
+                    loading={loading}
                   />
                 </div>
 
-                {data?.org && (
+                {orgData?.org && (
                   <ListRepositoriesPageTitle
-                    org={data.org}
-                    countRepositories={data.repositories.length}
+                    org={orgData.org}
+                    countRepositories={orgData.repositories.length}
                   />
                 )}
               </div>
@@ -80,26 +82,26 @@ function ListRepositories({ defaultOrg = '' }: Props) {
           <PageBlock>
             {error && <Alert type="error">{error.message}</Alert>}
 
-            {!error && !!data?.repositories?.length && (
+            {!error && !!orgData?.repositories?.length && (
               <ListRepositoriesFilters
                 filters={filters}
-                loading={isFetching}
+                loading={loading}
                 inputSort={inputSort}
                 inputDirection={inputDirection}
                 setInputSort={setInputSort}
-                setInputDirection={setInputDirection}
+                setInputDirection={setDirection}
               />
             )}
 
-            {isFetching && <Spinner />}
+            {loading && <Spinner />}
 
-            {!isFetching &&
+            {!loading &&
               !error &&
-              !data?.repositories?.length &&
+              !orgData?.repositories?.length &&
               formatMessage(messages.listRepositoriesEmptyLabel)}
 
-            {!isFetching && !!data?.repositories?.length && (
-              <ListRepositoriesContent repositories={data.repositories} />
+            {!loading && !!orgData?.repositories?.length && (
+              <ListRepositoriesContent repositories={orgData.repositories} />
             )}
           </PageBlock>
         )}
@@ -110,7 +112,7 @@ function ListRepositories({ defaultOrg = '' }: Props) {
 
 // Settings for the site editor.
 // The schema `properties` key correspond to the component props.
-ListRepositories.schema = {
+ListRepositoriesGraphQL.schema = {
   title: 'admin/editor.list-repositories.title',
   description: 'admin/editor.list-repositories.description',
   type: 'object',
@@ -124,4 +126,4 @@ ListRepositories.schema = {
   },
 }
 
-export default withQueryClient(ListRepositories)
+export default ListRepositoriesGraphQL

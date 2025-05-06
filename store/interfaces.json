@@ -2,7 +2,13 @@
   "store.list-repositories": {
     "allowed": "*"
   },
+  "store.list-repositories-graphql": {
+    "allowed": "*"
+  },
   "list-repositories": {
     "component": "ListRepositories"
+  },
+  "list-repositories-graphql": {
+    "component": "ListRepositoriesGraphQL"
   }
 }

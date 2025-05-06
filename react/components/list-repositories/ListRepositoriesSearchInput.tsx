@@ -1,0 +1,29 @@
+import React from 'react'
+import { useIntl } from 'react-intl'
+import { InputButton } from 'vtex.styleguide'
+
+import messages from '../../utils/messages'
+
+type Props = {
+  selected: string
+  loading: boolean
+}
+export default function ListRepositoriesSearchInput({
+  selected,
+  loading,
+}: Props) {
+  const { formatMessage } = useIntl()
+
+  return (
+    <InputButton
+      name="org"
+      label={formatMessage(messages.inputLabel)}
+      placeholder={formatMessage(messages.inputPlaceholder)}
+      size="regular"
+      button={formatMessage(messages.inputButtonLabel)}
+      defaultValue={selected}
+      isLoading={loading}
+      buttonProps={{ disabled: !selected }}
+    />
+  )
+}

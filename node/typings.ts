@@ -27,4 +27,10 @@ declare global {
       }
     >
   }
+
+  type GetOrgRepositoriesArgs = {
+    org: string
+    sort?: string
+    direction?: string
+  }
 }
