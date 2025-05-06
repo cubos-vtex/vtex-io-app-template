@@ -1,8 +1,8 @@
 {
-  "admin/editor.list-repositories.title": "Lista de Repositórios",
+  "admin/editor.list-repositories.title": "Repositórios de uma organização do GitHub",
   "admin/editor.list-repositories.description": "Exibe a lista de repositórios de uma organização do GitHub",
-  "admin/editor.list-repositories.props.org.title": "Organização no GitHub",
-  "admin/editor.list-repositories.props.org.description": "Usuário da organização no GitHub",
+  "admin/editor.list-repositories.props.default-org.title": "Organização do GitHub padrão",
+  "admin/editor.list-repositories.props.default-org.description": "Organização do GitHub padrão para listar repositórios",
 
   "store/list-repositories.input.label": "Pesquise por uma conta de organização do GitHub para listar seus repositórios",
   "store/list-repositories.input.placeholder": "Insira uma conta de organização do GitHub",

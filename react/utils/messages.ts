@@ -1,6 +1,21 @@
 import { defineMessages } from 'react-intl'
 
+/**
+ * Defines a set of localized messages for the application.
+ */
 export default defineMessages({
+  // defining site editor messages to avoid warnings
+  editorListRepositoriesTitle: { id: 'admin/editor.list-repositories.title' },
+  editorListRepositoriesDescription: {
+    id: 'admin/editor.list-repositories.description',
+  },
+  editorListRepositoriesPropDefaultOrgTitle: {
+    id: 'admin/editor.list-repositories.props.default-org.title',
+  },
+  editorListRepositoriesPropDefaultOrgDescription: {
+    id: 'admin/editor.list-repositories.props.default-org.description',
+  },
+
   // search input
   inputLabel: { id: 'store/list-repositories.input.label' },
   inputPlaceholder: { id: 'store/list-repositories.input.placeholder' },

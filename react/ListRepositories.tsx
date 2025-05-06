@@ -19,10 +19,10 @@ import type { RepositoriesData } from './typings'
 import messages from './utils/messages'
 
 type Props = {
-  org?: string
+  defaultOrg?: string
 }
 
-function ListRepositories({ org }: Props) {
+function ListRepositories({ defaultOrg = '' }: Props) {
   const { formatMessage } = useIntl()
 
   const SORT_OPTIONS = [
@@ -43,7 +43,7 @@ function ListRepositories({ org }: Props) {
   const DEFAULT_SORT = SORT_OPTIONS[0].value
   const DEFAULT_DIRECTION = SORT_DIRECTION_OPTIONS[0].value
 
-  const [selected, setSelected] = useState(org ?? '')
+  const [selected, setSelected] = useState(defaultOrg)
   const [sort, setSort] = useState(DEFAULT_SORT)
   const [direction, setDirection] = useState(DEFAULT_DIRECTION)
   const [query, setQuery] = useState({
@@ -51,6 +51,7 @@ function ListRepositories({ org }: Props) {
     direction: DEFAULT_DIRECTION,
   })
 
+  // Consuming backend route with useQuery hook of @tanstack/react-query.
   const { data, error, isFetching } = useQuery<RepositoriesData, Error>({
     queryKey: ['repositories', selected, query],
     enabled: !!selected,
@@ -213,15 +214,18 @@ function ListRepositories({ org }: Props) {
   )
 }
 
+// Settings for the site editor.
+// The schema `properties` key correspond to the component props.
 ListRepositories.schema = {
-  title: 'admin/editor.productSummaryList.title',
-  description: 'admin/editor.productSummaryList.description',
+  title: 'admin/editor.list-repositories.title',
+  description: 'admin/editor.list-repositories.description',
   type: 'object',
   properties: {
-    org: {
+    defaultOrg: {
       type: 'string',
-      title: 'admin/editor.list-repositories.props.org.title',
-      description: 'admin/editor.list-repositories.props.org.description',
+      title: 'admin/editor.list-repositories.props.default-org.title',
+      description:
+        'admin/editor.list-repositories.props.default-org.description',
     },
   },
 }
