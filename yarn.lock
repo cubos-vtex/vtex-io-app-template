@@ -453,7 +453,7 @@
     "@typescript-eslint/types" "4.33.0"
     eslint-visitor-keys "^2.0.0"
 
-"@vtex/danger@^0.2.7":
+"@vtex/danger@^0.2.9":
   version "0.2.9"
   resolved "https://registry.yarnpkg.com/@vtex/danger/-/danger-0.2.9.tgz#f308c3de89f997038efe2b3d902fc7225550fe61"
   integrity sha512-di3PCIhJ/pLgFJU+FIKM0lFWnigroos8Mt/kahDreisK4ZtaQFsne9LhT5rpVPmThL3CETj7i/gHsAtC7XxBwQ==

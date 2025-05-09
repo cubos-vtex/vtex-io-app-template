@@ -31,7 +31,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
-    "@vtex/danger": "^0.2.7",
+    "@vtex/danger": "^0.2.9",
     "@vtex/intl-equalizer": "^2.5.0",
     "@vtex/prettier-config": "^0.3.6",
     "eslint": "^7.16.0",
