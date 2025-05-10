@@ -77,6 +77,43 @@ export function withQueryClient<P, S>(Component: FC<P> & { schema?: S }) {
 }
 
 /**
+ * Extracts a meaningful error message from an API response.
+ *
+ * @template T - A type that extends `ApiResponse`.
+ * @param json - The parsed JSON object from the API response.
+ * @param response - The original `Response` object from the fetch request.
+ * @returns A string representing the error message. It prioritizes the following:
+ * - If `json.response.data` is a string, it returns that string.
+ * - If `json.response.data` is an object, it attempts to extract and return the `error`, `message`, or `Message` property.
+ * - If none of the above are available, it falls back to `json.message`, `json.code`, or a combination of the HTTP status and status text.
+ */
+function extractErrorMessage<T extends ApiResponse>(
+  json: T,
+  response: Response
+): string {
+  if (typeof json?.response?.data === 'string') {
+    return json.response.data
+  }
+
+  if (typeof json?.response?.data === 'object') {
+    const { error, message, Message } = json.response.data
+    const meaningfulMessage = error || message || Message
+
+    if (meaningfulMessage) {
+      return meaningfulMessage
+    }
+  }
+
+  return (
+    json?.message ??
+    json?.code ??
+    `${response.status.toString()}${
+      response.statusText ? `: ${response.statusText}` : ''
+    }`
+  )
+}
+
+/**
  * Factory function to create an API request handler.
  *
  * This function generates an asynchronous function that performs an HTTP request
@@ -123,17 +160,7 @@ export function apiRequestFactory<T extends ApiResponse>({
     const json: T = await response.json()
 
     if (!response.ok) {
-      throw new Error(
-        typeof json?.response?.data === 'string'
-          ? json.response.data
-          : typeof json?.response?.data === 'object' && json.response.data.error
-          ? json.response.data.error
-          : json?.message ??
-            json?.code ??
-            `${response.status.toString()}${
-              response.statusText ? `: ${response.statusText}` : ''
-            }`
-      )
+      throw new Error(extractErrorMessage(json, response))
     }
 
     return json

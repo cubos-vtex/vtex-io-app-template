@@ -1,7 +1,7 @@
 export type ApiResponse = {
   code?: string
   message?: string
-  response?: { data?: Record<string, unknown> & { error?: string } }
+  response?: { data?: string | Record<string, string> }
 }
 
 export type ApitRequestInput = {
