@@ -1,6 +1,6 @@
 import { method } from '@vtex/api'
 
-import { createMasterdataHandler } from '../../../utils'
+import { createMasterdataHandler } from '../utils'
 
 async function getTask(ctx: Context, next?: NextFn) {
   ctx.body = await ctx.state.taskMasterdataController.get()

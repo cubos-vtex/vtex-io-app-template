@@ -1,7 +1,3 @@
-import { getGitHubRepositoriesByOrg } from './queries/getGitHubRepositoriesByOrg'
+import * as Query from './queries'
 
-export default {
-  resolvers: {
-    Query: { getGitHubRepositoriesByOrg },
-  },
-}
+export default { resolvers: { Query } }
