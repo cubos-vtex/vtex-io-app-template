@@ -9,6 +9,14 @@
     "getRepositoriesByOrg": {
       "path": "/_v/<APP_NAME>/get-repositories-by-org/:org",
       "public": true
+    },
+    "tasks": {
+      "path": "/_v/<APP_NAME>/tasks",
+      "public": true
+    },
+    "tasksId": {
+      "path": "/_v/<APP_NAME>/tasks/:id",
+      "public": true
     }
   }
 }

@@ -41,7 +41,7 @@ export class Github extends ExternalClient {
             throw new Error('GiHub API rate limit exceeded. Try again later.')
 
           case 404:
-            throw new Error(`Organization "${org}" not found.`)
+            throw new Error(`Organization ${org} not found.`)
 
           default:
             throw e

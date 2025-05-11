@@ -1,9 +1,27 @@
-import type { ServiceContext } from '@vtex/api'
+import type { RecorderState, ServiceContext } from '@vtex/api'
 
 import type { Clients } from './clients'
+import type {
+  AppSettingsController,
+  GithubController,
+  TaskMasterdataController,
+} from './controllers'
 
 declare global {
-  type Context = ServiceContext<Clients>
+  type Context = ServiceContext<
+    Clients,
+    RecorderState & {
+      appSettingsController: AppSettingsController
+      githubController: GithubController
+      taskMasterdataController: TaskMasterdataController
+    }
+  >
+
+  type NextFn = () => Promise<void>
+
+  type Handler = (ctx: Context, next?: NextFn) => Promise<void>
+
+  type AppSettings = { schemaHash: string }
 
   type Repository = {
     owner: {
@@ -32,5 +50,16 @@ declare global {
     org: string
     sort?: string
     direction?: string
+  }
+
+  type MasterdataInternalFields = {
+    id: string
+    createdIn: string
+    lastInteractionIn: string
+  }
+
+  type Task = MasterdataInternalFields & {
+    name: string
+    description: string
   }
 }
