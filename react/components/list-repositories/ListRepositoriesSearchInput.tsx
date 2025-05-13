@@ -8,10 +8,8 @@ type Props = {
   selected: string
   loading: boolean
 }
-export default function ListRepositoriesSearchInput({
-  selected,
-  loading,
-}: Props) {
+
+export function ListRepositoriesSearchInput({ selected, loading }: Props) {
   const { formatMessage } = useIntl()
 
   return (

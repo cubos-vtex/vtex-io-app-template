@@ -4,5 +4,8 @@
   },
   "store.list-repositories-graphql": {
     "path": "/<APP_NAME>/list-repositories-graphql"
+  },
+  "store.tasks": {
+    "path": "/<APP_NAME>/tasks"
   }
 }

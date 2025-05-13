@@ -1,4 +1,4 @@
-export type ApiResponse = {
+export type ApiResponse<T = unknown> = T & {
   code?: string
   message?: string
   response?: { data?: string | Record<string, string> }
@@ -28,9 +28,6 @@ export type GitHubOrganizationRepositories = {
   repositories: GitHubRepository[]
 }
 
-export type GitHubRepositoriesApiResponse = ApiResponse &
-  GitHubOrganizationRepositories
-
 export type GetGitHubRepositoriesQuery = {
   getGitHubRepositoriesByOrg: GitHubOrganizationRepositories
 }
@@ -40,3 +37,22 @@ export type GetGitHubRepositoriesArgs = {
   sort?: string
   direction?: string
 }
+
+export type SearchMasterdataResponse<T> = {
+  data: T[]
+  pagination: {
+    page: number
+    pageSize: number
+    total: number
+  }
+}
+
+export type Task = {
+  id: string
+  createdIn: string
+  lastInteractionIn: string
+  name: string
+  description: string
+}
+
+export type InputTask = Pick<Task, 'name' | 'description'>

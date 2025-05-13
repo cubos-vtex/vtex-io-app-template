@@ -24,10 +24,12 @@ export async function checkSchemas(ctx: Context, next?: NextFn) {
     )
   )
 
-  await ctx.state.appSettingsController.save({
-    ...settings,
-    schemaHash: currentSchemaHash,
-  })
+  await ctx.state.appSettingsController
+    .save({
+      ...settings,
+      schemaHash: currentSchemaHash,
+    })
+    .catch(() => null)
 
   await next?.()
 }

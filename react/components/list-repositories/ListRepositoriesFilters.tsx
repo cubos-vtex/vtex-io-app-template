@@ -3,7 +3,7 @@ import { useIntl } from 'react-intl'
 import { Button, Dropdown } from 'vtex.styleguide'
 
 import messages from '../../utils/messages'
-import useListRepositoriesFilters from './hooks/useListRepositoriesFilters'
+import { useListRepositoriesFilters } from './hooks'
 
 type Props = {
   loading: boolean
@@ -17,7 +17,7 @@ type Props = {
   setInputDirection: (direction: string) => void
 }
 
-export default function ListRepositoriesFilters({
+export function ListRepositoriesFilters({
   loading,
   filters,
   inputSort,

@@ -2,7 +2,7 @@ import { useIntl } from 'react-intl'
 
 import messages from '../../../utils/messages'
 
-export default function useListRepositoriesFilters() {
+export function useListRepositoriesFilters() {
   const { formatMessage } = useIntl()
 
   const SORT_OPTIONS = [

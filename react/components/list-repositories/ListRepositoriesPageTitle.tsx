@@ -10,10 +10,7 @@ type Props = {
   countRepositories: number
 }
 
-export default function ListRepositoriesPageTitle({
-  org,
-  countRepositories,
-}: Props) {
+export function ListRepositoriesPageTitle({ org, countRepositories }: Props) {
   const { formatMessage } = useIntl()
 
   return (

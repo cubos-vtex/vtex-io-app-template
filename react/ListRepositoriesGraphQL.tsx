@@ -3,11 +3,13 @@ import { useQuery } from 'react-apollo'
 import { useIntl } from 'react-intl'
 import { Alert, Layout, PageBlock, PageHeader, Spinner } from 'vtex.styleguide'
 
-import useListRepositoriesFilters from './components/list-repositories/hooks/useListRepositoriesFilters'
-import ListRepositoriesContent from './components/list-repositories/ListRepositoriesContent'
-import ListRepositoriesFilters from './components/list-repositories/ListRepositoriesFilters'
-import ListRepositoriesPageTitle from './components/list-repositories/ListRepositoriesPageTitle'
-import ListRepositoriesSearchInput from './components/list-repositories/ListRepositoriesSearchInput'
+import {
+  ListRepositoriesContent,
+  ListRepositoriesFilters,
+  ListRepositoriesPageTitle,
+  ListRepositoriesSearchInput,
+} from './components/list-repositories'
+import { useListRepositoriesFilters } from './components/list-repositories/hooks'
 import GITHUB_REPOSITORIES_QUERY from './graphql/getGitHubRepositoriesByOrg.graphql'
 import type {
   GetGitHubRepositoriesArgs,

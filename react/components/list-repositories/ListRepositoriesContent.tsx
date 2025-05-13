@@ -6,7 +6,8 @@ import type { GitHubRepository } from '../../typings'
 type Props = {
   repositories: GitHubRepository[]
 }
-export default function ListRepositoriesContent({ repositories }: Props) {
+
+export function ListRepositoriesContent({ repositories }: Props) {
   return (
     <div className="flex flex-wrap justify-center">
       {repositories.map((repo) => (

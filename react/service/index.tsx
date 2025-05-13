@@ -79,7 +79,6 @@ export function withQueryClient<P, S>(Component: FC<P> & { schema?: S }) {
 /**
  * Extracts a meaningful error message from an API response.
  *
- * @template T - A type that extends `ApiResponse`.
  * @param json - The parsed JSON object from the API response.
  * @param response - The original `Response` object from the fetch request.
  * @returns A string representing the error message. It prioritizes the following:
@@ -87,10 +86,7 @@ export function withQueryClient<P, S>(Component: FC<P> & { schema?: S }) {
  * - If `json.response.data` is an object, it attempts to extract and return the `error`, `message`, or `Message` property.
  * - If none of the above are available, it falls back to `json.message`, `json.code`, or a combination of the HTTP status and status text.
  */
-function extractErrorMessage<T extends ApiResponse>(
-  json: T,
-  response: Response
-): string {
+function extractErrorMessage(json: ApiResponse, response: Response): string {
   if (typeof json?.response?.data === 'string') {
     return json.response.data
   }
@@ -130,18 +126,18 @@ function extractErrorMessage<T extends ApiResponse>(
  * @param {Record<string, string>} [params.headers] - An object representing custom headers.
  * @param {unknown} [params.body] - The body of the request, if applicable.
  *
- * @returns {() => Promise<T>} An asynchronous function that performs the API request
- * and returns the parsed JSON response of type `T`.
+ * @returns {() => Promise<ApiResponse<T>>} An asynchronous function that performs the API request
+ * and returns the parsed JSON response of type `ApiResponse<T>`.
  *
  * @throws {Error} Throws an error if the request fails or the response status is not OK.
  */
-export function apiRequestFactory<T extends ApiResponse>({
+export function apiRequestFactory<T>({
   url,
   method = 'GET',
   query = {},
   headers,
   body,
-}: ApitRequestInput) {
+}: ApitRequestInput): () => Promise<ApiResponse<T>> {
   const queryParams = Object.entries(query)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')
@@ -157,7 +153,7 @@ export function apiRequestFactory<T extends ApiResponse>({
       throw new Error(`Request failed with args ${args}:\n${e.toString()}`)
     })
 
-    const json: T = await response.json()
+    const json: ApiResponse<T> = await response.json()
 
     if (!response.ok) {
       throw new Error(extractErrorMessage(json, response))

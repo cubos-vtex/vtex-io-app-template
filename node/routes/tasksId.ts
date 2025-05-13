@@ -13,7 +13,7 @@ async function updateTask(ctx: Context, next?: NextFn) {
 }
 
 async function deleteTask(ctx: Context, next?: NextFn) {
-  await ctx.state.taskMasterdataController.delete()
+  ctx.body = await ctx.state.taskMasterdataController.delete()
   await next?.()
 }
 

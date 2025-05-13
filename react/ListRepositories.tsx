@@ -3,13 +3,15 @@ import React, { useState } from 'react'
 import { useIntl } from 'react-intl'
 import { Alert, Layout, PageBlock, PageHeader, Spinner } from 'vtex.styleguide'
 
-import useListRepositoriesFilters from './components/list-repositories/hooks/useListRepositoriesFilters'
-import ListRepositoriesContent from './components/list-repositories/ListRepositoriesContent'
-import ListRepositoriesFilters from './components/list-repositories/ListRepositoriesFilters'
-import ListRepositoriesPageTitle from './components/list-repositories/ListRepositoriesPageTitle'
-import ListRepositoriesSearchInput from './components/list-repositories/ListRepositoriesSearchInput'
+import {
+  ListRepositoriesContent,
+  ListRepositoriesFilters,
+  ListRepositoriesPageTitle,
+  ListRepositoriesSearchInput,
+} from './components/list-repositories'
+import { useListRepositoriesFilters } from './components/list-repositories/hooks'
 import { apiRequestFactory, withQueryClient } from './service'
-import type { GitHubRepositoriesApiResponse } from './typings'
+import type { GitHubOrganizationRepositories } from './typings'
 import messages from './utils/messages'
 
 type Props = {
@@ -29,7 +31,7 @@ function ListRepositories({ defaultOrg = '' }: Props) {
 
   // Consuming backend route with useQuery hook of @tanstack/react-query.
   const { data, error, isFetching } = useQuery<
-    GitHubRepositoriesApiResponse,
+    GitHubOrganizationRepositories,
     Error
   >({
     queryKey: ['repositories', selected, filters],

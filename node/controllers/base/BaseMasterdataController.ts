@@ -66,7 +66,11 @@ export class BaseMasterdataController<
   }
 
   protected async deleteDocument(id: string) {
-    return this.masterdata.deleteDocument({ ...this.commonArgs, id })
+    const deleted = await this.getDocument(id)
+
+    await this.masterdata.deleteDocument({ ...this.commonArgs, id })
+
+    return deleted
   }
 
   protected async searchDocumentsWithPaginationInfo(
