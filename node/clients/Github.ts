@@ -25,14 +25,15 @@ export class Github extends ExternalClient {
     query: ParsedUrlQuery,
     page = 1
   ) {
-    const params = new URLSearchParams({
+    const params = {
       per_page: GET_REPOSITORIES_PAGE_SIZE.toString(),
       page: page.toString(),
       ...query,
-    })
+    }
 
     return this.http
-      .get<Repository[]>(`/orgs/${org}/repos?${params.toString()}`, {
+      .get<Repository[]>(`/orgs/${org}/repos`, {
+        params,
         metric: 'get-org-repositories',
       })
       .catch((e) => {

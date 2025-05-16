@@ -16,6 +16,9 @@ export default defineMessages({
     id: 'admin/editor.list-repositories.props.default-org.description',
   },
 
+  // general error messages
+  notAuthenticatedError: { id: 'store/not-authenticated-error' },
+
   // search input
   inputLabel: { id: 'store/list-repositories.input.label' },
   inputPlaceholder: { id: 'store/list-repositories.input.placeholder' },
@@ -41,4 +44,18 @@ export default defineMessages({
   sortDirectionButtonLabel: {
     id: 'store/list-repositories.sort-direction.button.label',
   },
+
+  // tasks CRUD
+  tasksTitle: { id: 'store/tasks.title' },
+  tasksInputTitleLabel: { id: 'store/tasks.input.title.label' },
+  tasksInputTitlePlaceholder: { id: 'store/tasks.input.title.placeholder' },
+  tasksInputDescriptionLabel: { id: 'store/tasks.input.description.label' },
+  tasksInputDescriptionPlaceholder: {
+    id: 'store/tasks.input.description.placeholder',
+  },
+  tasksButtonAddLabel: { id: 'store/tasks.button.add.label' },
+  tasksEmptyLabel: { id: 'store/tasks.empty.label' },
+  tasksRequiredLabel: { id: 'store/tasks.required.label' },
+  tasksDeletedLabel: { id: 'store/tasks.deleted.label' },
+  tasksUndoLabel: { id: 'store/tasks.undo.label' },
 })

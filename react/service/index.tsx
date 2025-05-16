@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import type { FC } from 'react'
 import React from 'react'
 
-import type { ApiResponse, ApitRequestInput } from '../typings'
+import type { ApiRequestInput, ApiResponse } from '../typings'
 
 /**
  * A list of error patterns that indicate retryable errors.
@@ -119,7 +119,7 @@ function extractErrorMessage(json: ApiResponse, response: Response): string {
  *
  * @template T - The expected type of the API response.
  *
- * @param {ApitRequestInput} params - The input parameters for the API request.
+ * @param {ApiRequestInput} params - The input parameters for the API request.
  * @param {string} params.url - The URL of the API endpoint.
  * @param {string} [params.method='GET'] - The HTTP method to use for the request.
  * @param {Record<string, string>} [params.query={}] - An object representing query parameters.
@@ -137,13 +137,15 @@ export function apiRequestFactory<T>({
   query = {},
   headers,
   body,
-}: ApitRequestInput): () => Promise<ApiResponse<T>> {
+}: ApiRequestInput): () => Promise<ApiResponse<T>> {
   const queryParams = Object.entries(query)
     .map(([key, value]) => `${key}=${value}`)
     .join('&')
 
+  const requestUrl = url.concat(url.includes('?') ? '&' : '?', queryParams)
+
   return async function apiRequest() {
-    const response = await fetch(url.concat('?', queryParams), {
+    const response = await fetch(requestUrl, {
       method,
       headers,
       ...(body && { body: JSON.stringify(body) }),

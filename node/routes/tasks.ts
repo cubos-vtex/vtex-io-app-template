@@ -1,18 +1,16 @@
 import { method } from '@vtex/api'
 
-import { createMasterdataHandler } from '../utils'
+import { createAuthenticatedMasterdataHandlers } from '../utils'
 
-async function searchTasks(ctx: Context, next?: NextFn) {
+async function searchTasks(ctx: Context) {
   ctx.body = await ctx.state.taskMasterdataController.search()
-  await next?.()
 }
 
-async function createTask(ctx: Context, next?: NextFn) {
+async function createTask(ctx: Context) {
   ctx.body = await ctx.state.taskMasterdataController.create()
-  await next?.()
 }
 
 export default method({
-  GET: createMasterdataHandler(searchTasks),
-  POST: createMasterdataHandler(createTask),
+  GET: createAuthenticatedMasterdataHandlers([searchTasks]),
+  POST: createAuthenticatedMasterdataHandlers([createTask]),
 })

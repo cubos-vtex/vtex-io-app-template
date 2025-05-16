@@ -1,4 +1,6 @@
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { useCallback } from 'react'
+import { useIntl } from 'react-intl'
 
 import { apiRequestFactory } from '../../../service'
 import type {
@@ -6,6 +8,7 @@ import type {
   SearchMasterdataResponse,
   Task,
 } from '../../../typings'
+import { useToast } from '../../common/hooks'
 
 const BASE_URL = '/_v/<APP_NAME>/tasks'
 
@@ -16,6 +19,8 @@ type Props<T> = {
 
 // Consuming backend route with useQuery and useMutation hooks of @tanstack/react-query.
 export function useTasks<T = Task>(props?: Props<T>) {
+  const { showToast } = useToast()
+  const { formatMessage } = useIntl()
   const { refetch, ...searchTasksQuery } = useQuery<
     SearchMasterdataResponse<T>,
     Error
@@ -25,6 +30,13 @@ export function useTasks<T = Task>(props?: Props<T>) {
   })
 
   const refetchAfterDelay = () => window.setTimeout(refetch, 500)
+
+  const onMutationError = useCallback(
+    ({ message }: Error) => {
+      showToast(formatMessage({ id: message, defaultMessage: message }))
+    },
+    [formatMessage, showToast]
+  )
 
   return {
     searchTasksQuery: { refetch, ...searchTasksQuery },
@@ -36,6 +48,7 @@ export function useTasks<T = Task>(props?: Props<T>) {
           method: 'POST',
           body: task,
         })(),
+      onError: onMutationError,
       onSuccess: (data) => {
         props?.onAddTaskSuccess?.(data)
         refetchAfterDelay()
@@ -48,6 +61,7 @@ export function useTasks<T = Task>(props?: Props<T>) {
           url: `${BASE_URL}/${id}`,
           method: 'DELETE',
         })(),
+      onError: onMutationError,
       onSuccess: (data) => {
         props?.onDeleteTaskSuccess?.(data)
         refetchAfterDelay()

@@ -4,22 +4,31 @@
   "admin/editor.list-repositories.props.default-org.title": "Organización de GitHub predeterminada",
   "admin/editor.list-repositories.props.default-org.description": "Organización de GitHub predeterminada para enumerar repositorios",
 
+  "store/not-authenticated-error": "Necesitas estar autenticado",
+
   "store/list-repositories.input.label": "Busca una cuenta de organización de GitHub para listar sus repositorios",
   "store/list-repositories.input.placeholder": "Ingresa una cuenta de organización de GitHub",
   "store/list-repositories.input.button.label": "Buscar",
-
   "store/list-repositories.title": "Repositorios de {org} ({count})",
   "store/list-repositories.empty.label": "No se encontraron repositorios.",
-
   "store/list-repositories.sort.placeholder": "Ordenar por",
   "store/list-repositories.sort.name.label": "Nombre",
   "store/list-repositories.sort.created.label": "Fecha de creación",
   "store/list-repositories.sort.updated.label": "Última actualización",
   "store/list-repositories.sort.pushed.label": "Último push",
-
   "store/list-repositories.direction.placeholder": "Dirección",
   "store/list-repositories.direction.asc.label": "Ascendente",
   "store/list-repositories.direction.desc.label": "Descendente",
+  "store/list-repositories.sort-direction.button.label": "Actualizar",
 
-  "store/list-repositories.sort-direction.button.label": "Actualizar"
+  "store/tasks.title": "Lista de Tareas",
+  "store/tasks.input.title.label": "Título",
+  "store/tasks.input.title.placeholder": "Escribe un título para la tarea",
+  "store/tasks.input.description.label": "Descripción",
+  "store/tasks.input.description.placeholder": "Escribe una descripción para la tarea",
+  "store/tasks.button.add.label": "Agregar tarea",
+  "store/tasks.empty.label": "No se encontraron tareas",
+  "store/tasks.required.label": "Se requieren título y descripción",
+  "store/tasks.deleted.label": "La tarea {title} fue eliminada",
+  "store/tasks.undo.label": "Deshacer"
 }

@@ -1,6 +1,8 @@
 import { UserInputError } from '@vtex/api'
 import { json } from 'co-body'
 
+import { throwAuthenticationError } from '../../utils'
+
 type Fields = Record<string, unknown>
 type QueryObject<T extends string[]> = { [K in T[number]]?: string }
 
@@ -71,5 +73,15 @@ export class BaseController {
     }
 
     return fields
+  }
+
+  protected async getStoreUserEmail() {
+    const { storeUserEmail } = this.ctx.state
+
+    if (!storeUserEmail) {
+      throwAuthenticationError()
+    }
+
+    return storeUserEmail
   }
 }

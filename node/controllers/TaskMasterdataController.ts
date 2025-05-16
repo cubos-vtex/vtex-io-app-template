@@ -1,9 +1,8 @@
-import {
-  TASK_ENTITY,
-  TASK_FIELDS,
-  TASK_REQUIRED_FIELDS,
-} from '../masterdata-setup'
+import { TASK_ENTITY, TASK_FIELDS } from '../masterdata-setup'
+import { throwForbiddenError } from '../utils'
 import { BaseMasterdataController } from './base/BaseMasterdataController'
+
+const TASK_REQUIRED_FIELDS = ['title', 'description']
 
 export class TaskMasterdataController extends BaseMasterdataController<Task> {
   constructor(ctx: Context) {
@@ -11,7 +10,8 @@ export class TaskMasterdataController extends BaseMasterdataController<Task> {
   }
 
   private async getTaskFields(requiredFields?: string[]) {
-    return this.getBodyFields<Task>(requiredFields)
+    // The email will not be expected in the body. It will be taken from the session.
+    return this.getBodyFields<Omit<Task, 'email'>>(requiredFields)
   }
 
   private getIdParam() {
@@ -19,36 +19,61 @@ export class TaskMasterdataController extends BaseMasterdataController<Task> {
   }
 
   public async get() {
+    const storeUserEmail = await this.getStoreUserEmail()
     const id = this.getIdParam()
+    const task = await this.getDocument(id)
 
-    return this.getDocument(id)
+    if (task.email !== storeUserEmail) {
+      throwForbiddenError()
+    }
+
+    return task
   }
 
   public async create() {
+    const storeUserEmail = await this.getStoreUserEmail()
     const fields = await this.getTaskFields(TASK_REQUIRED_FIELDS)
 
-    return this.createDocument(fields)
+    return this.createDocument({ ...fields, email: storeUserEmail })
   }
 
   public async update() {
-    const id = this.getIdParam()
+    const task = await this.get()
     const fields = await this.getTaskFields()
+    const newFields = { ...task, ...fields }
 
-    return this.updatePartialDocument(id, fields)
+    await this.updatePartialDocument(task.id, newFields)
+
+    return newFields
   }
 
   public async delete() {
-    const id = this.getIdParam()
+    const toBeDeleted = await this.get()
 
-    return this.deleteDocument(id)
+    await this.deleteDocument(toBeDeleted.id)
+
+    return toBeDeleted
   }
 
   public async search() {
+    const storeUserEmail = await this.getStoreUserEmail()
+
     const {
       sort = 'createdIn desc',
-      where,
       pagination,
     } = this.getMasterdataSearchQuery()
+
+    const conditions = [`email=${storeUserEmail}`]
+    const { search } = this.getQueryStringParams(['search'] as const)
+    const cleanSearch = search?.replace(/"/g, '')
+
+    if (cleanSearch) {
+      conditions.push(
+        `(title="*${cleanSearch}*" OR description="*${cleanSearch}*")`
+      )
+    }
+
+    const where = conditions.join(' AND ')
 
     return this.searchDocumentsWithPaginationInfo(pagination, where, sort)
   }

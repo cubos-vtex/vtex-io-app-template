@@ -4,7 +4,7 @@ export type ApiResponse<T = unknown> = T & {
   response?: { data?: string | Record<string, string> }
 }
 
-export type ApitRequestInput = {
+export type ApiRequestInput = {
   url: string
   method?: string
   query?: Record<string, string>
@@ -51,8 +51,9 @@ export type Task = {
   id: string
   createdIn: string
   lastInteractionIn: string
-  name: string
+  email: string
+  title: string
   description: string
 }
 
-export type InputTask = Pick<Task, 'name' | 'description'>
+export type InputTask = Pick<Task, 'title' | 'description'>

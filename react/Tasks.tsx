@@ -1,6 +1,6 @@
 import React, { useRef } from 'react'
+import { useIntl } from 'react-intl'
 import {
-  Alert,
   Button,
   ButtonWithIcon,
   Card,
@@ -13,38 +13,50 @@ import {
   Textarea,
 } from 'vtex.styleguide'
 
+import { AlertError } from './components/common'
 import { useToast } from './components/common/hooks'
 import { useTasks } from './components/tasks/hooks'
 import { withQueryClient } from './service'
+import messages from './utils/messages'
 
 function Tasks() {
-  const nameRef = useRef<HTMLInputElement>()
+  const { formatMessage } = useIntl()
+  const titleRef = useRef<HTMLInputElement>()
   const descriptionRef = useRef<HTMLTextAreaElement>()
   const { showToast } = useToast()
 
   const { searchTasksQuery, addTaskMutation, deleteTaskMutation } = useTasks({
     onAddTaskSuccess() {
-      if (nameRef.current) nameRef.current.value = ''
+      if (titleRef.current) titleRef.current.value = ''
       if (descriptionRef.current) descriptionRef.current.value = ''
     },
     onDeleteTaskSuccess(data) {
       showToast({
-        message: (
-          <>
-            A task <strong>{data?.name}</strong> foi excluída
-          </>
-        ),
+        message: formatMessage(messages.tasksDeletedLabel, {
+          title: <strong key={data.id}>{data.title}</strong>,
+        }),
         duration: 10000,
         action: {
-          label: 'Desfazer',
+          label: formatMessage(messages.tasksUndoLabel),
           onClick: () => addTaskMutation.mutate(data),
         },
       })
     },
   })
 
-  const error =
-    searchTasksQuery.error ?? addTaskMutation.error ?? deleteTaskMutation.error
+  const { error: searchError } = searchTasksQuery
+
+  if (searchTasksQuery.isInitialLoading) {
+    return <Layout pageHeader={<PageHeader title={<Spinner />} />} />
+  }
+
+  if (searchError?.message === messages.notAuthenticatedError.id) {
+    return (
+      <Layout
+        pageHeader={<PageHeader title={<AlertError error={searchError} />} />}
+      />
+    )
+  }
 
   const disabled =
     searchTasksQuery.isLoading ||
@@ -54,37 +66,39 @@ function Tasks() {
   const tasks = searchTasksQuery.data?.data
 
   const handleAddTask = () => {
-    const name = nameRef.current?.value
+    const title = titleRef.current?.value
     const description = descriptionRef.current?.value
 
-    if (name && description) {
-      addTaskMutation.mutate({ name, description })
+    if (title && description) {
+      addTaskMutation.mutate({ title, description })
     } else {
-      showToast('Título e descrição são obrigatórios')
+      showToast(formatMessage(messages.tasksRequiredLabel))
     }
   }
 
   const handleDeleteTask = (id: string) => deleteTaskMutation.mutate(id)
 
   return (
-    <Layout pageHeader={<PageHeader title="Lista de Tarefas" />}>
+    <Layout
+      pageHeader={<PageHeader title={formatMessage(messages.tasksTitle)} />}
+    >
       <PageBlock>
         <div className="mb4">
           <Input
-            required
-            ref={nameRef}
-            placeholder="Escreva um título para a tarefa"
-            label="Título"
+            ref={titleRef}
+            label={formatMessage(messages.tasksInputTitleLabel)}
+            placeholder={formatMessage(messages.tasksInputTitlePlaceholder)}
             disabled={disabled}
           />
         </div>
         <div className="mb4">
           <Textarea
-            required
             size="small"
             ref={descriptionRef}
-            placeholder="Escreva uma descrição para a tarefa"
-            label="Descrição"
+            label={formatMessage(messages.tasksInputDescriptionLabel)}
+            placeholder={formatMessage(
+              messages.tasksInputDescriptionPlaceholder
+            )}
             disabled={disabled}
           />
         </div>
@@ -94,18 +108,18 @@ function Tasks() {
             isLoading={addTaskMutation.isLoading}
             disabled={disabled}
           >
-            Adicionar tarefa
+            {formatMessage(messages.tasksButtonAddLabel)}
           </Button>
         </div>
 
-        {error && <Alert type="error">{error.message}</Alert>}
+        {searchError && <AlertError error={searchError} />}
 
         {searchTasksQuery.isLoading && <Spinner />}
 
         {!searchTasksQuery.isLoading &&
-          !error &&
+          !searchError &&
           !tasks?.length &&
-          'Nenhuma tarefa encontrada'}
+          formatMessage(messages.tasksEmptyLabel)}
 
         {!searchTasksQuery.isLoading && !!tasks?.length && (
           <div className="flex flex-wrap justify-center">
@@ -124,7 +138,7 @@ function Tasks() {
                     className="flex flex-column justify-center tc c-action-primary hover-c-action-primary relative"
                     style={{ height: 140 }}
                   >
-                    <span className="fw6">{task.name}</span>
+                    <span className="fw6">{task.title}</span>
                     {!!task.description && (
                       <div
                         className="mt4 t-small c-on-base"

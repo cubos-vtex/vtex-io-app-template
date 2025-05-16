@@ -11,6 +11,7 @@ declare global {
   type Context = ServiceContext<
     Clients,
     RecorderState & {
+      storeUserEmail?: string
       appSettingsController: AppSettingsController
       githubController: GithubController
       taskMasterdataController: TaskMasterdataController
@@ -59,7 +60,8 @@ declare global {
   }
 
   type Task = MasterdataInternalFields & {
-    name: string
+    email: string
+    title: string
     description: string
   }
 }

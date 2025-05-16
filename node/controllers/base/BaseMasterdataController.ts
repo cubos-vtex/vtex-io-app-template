@@ -52,25 +52,16 @@ export class BaseMasterdataController<
     return this.getDocument(DocumentId)
   }
 
-  protected async updatePartialDocument(id: string, fields: T) {
-    const current = await this.getDocument(id)
-    const newFields = { ...current, ...fields }
-
-    await this.masterdata.updatePartialDocument({
+  protected async updatePartialDocument(id: string, fields: Partial<T>) {
+    return this.masterdata.updatePartialDocument({
       ...this.commonArgs,
       id,
-      fields: newFields,
+      fields,
     })
-
-    return newFields
   }
 
   protected async deleteDocument(id: string) {
-    const deleted = await this.getDocument(id)
-
-    await this.masterdata.deleteDocument({ ...this.commonArgs, id })
-
-    return deleted
+    return this.masterdata.deleteDocument({ ...this.commonArgs, id })
   }
 
   protected async searchDocumentsWithPaginationInfo(

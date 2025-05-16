@@ -4,22 +4,31 @@
   "admin/editor.list-repositories.props.default-org.title": "Default GitHub Organization",
   "admin/editor.list-repositories.props.default-org.description": "Default GitHub organization to list repositories",
 
+  "store/not-authenticated-error": "You need to be authenticated",
+
   "store/list-repositories.input.label": "Search for a GitHub organization account to list its repositories",
   "store/list-repositories.input.placeholder": "Insert a GitHub organization account",
   "store/list-repositories.input.button.label": "Search",
-
   "store/list-repositories.title": "Repositories from {org} ({count})",
   "store/list-repositories.empty.label": "No repositories found.",
-
   "store/list-repositories.sort.placeholder": "Sort by",
   "store/list-repositories.sort.name.label": "Name",
   "store/list-repositories.sort.created.label": "Creation date",
-  "store/list-repositories.sort.updated.label": "Last up,date",
+  "store/list-repositories.sort.updated.label": "Last update",
   "store/list-repositories.sort.pushed.label": "Last push",
-
   "store/list-repositories.direction.placeholder": "Direction",
   "store/list-repositories.direction.asc.label": "Ascending",
   "store/list-repositories.direction.desc.label": "Descending",
+  "store/list-repositories.sort-direction.button.label": "Update",
 
-  "store/list-repositories.sort-direction.button.label": "Update"
+  "store/tasks.title": "Tasks List",
+  "store/tasks.input.title.label": "Title",
+  "store/tasks.input.title.placeholder": "Write a title for the task",
+  "store/tasks.input.description.label": "Description",
+  "store/tasks.input.description.placeholder": "Write a description for the task",
+  "store/tasks.button.add.label": "Add task",
+  "store/tasks.empty.label": "No tasks found",
+  "store/tasks.required.label": "Title and description are required",
+  "store/tasks.deleted.label": "The task {title} was deleted",
+  "store/tasks.undo.label": "Undo"
 }
