@@ -5,10 +5,10 @@
   "admin/editor.list-repositories.props.default-org.description": "Default GitHub organization to list repositories",
 
   "store/not-authenticated-error": "You need to be authenticated",
+  "store/search.label": "Search",
 
   "store/list-repositories.input.label": "Search for a GitHub organization account to list its repositories",
   "store/list-repositories.input.placeholder": "Insert a GitHub organization account",
-  "store/list-repositories.input.button.label": "Search",
   "store/list-repositories.title": "Repositories from {org} ({count})",
   "store/list-repositories.empty.label": "No repositories found.",
   "store/list-repositories.sort.placeholder": "Sort by",

@@ -5,10 +5,10 @@
   "admin/editor.list-repositories.props.default-org.description": "Organización de GitHub predeterminada para enumerar repositorios",
 
   "store/not-authenticated-error": "Necesitas estar autenticado",
+  "store/search.label": "Buscar",
 
   "store/list-repositories.input.label": "Busca una cuenta de organización de GitHub para listar sus repositorios",
   "store/list-repositories.input.placeholder": "Ingresa una cuenta de organización de GitHub",
-  "store/list-repositories.input.button.label": "Buscar",
   "store/list-repositories.title": "Repositorios de {org} ({count})",
   "store/list-repositories.empty.label": "No se encontraron repositorios.",
   "store/list-repositories.sort.placeholder": "Ordenar por",

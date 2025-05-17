@@ -10,9 +10,10 @@ import type {
 } from '../../../typings'
 import { useToast } from '../../common/hooks'
 
-const BASE_URL = '/_v/<APP_NAME>/tasks'
+const BASE_URL = '/_v/my-super-app/tasks'
 
 type Props<T> = {
+  search?: string
   onAddTaskSuccess?: (data: T) => void
   onDeleteTaskSuccess?: (data: T) => void
 }
@@ -21,12 +22,15 @@ type Props<T> = {
 export function useTasks<T = Task>(props?: Props<T>) {
   const { showToast } = useToast()
   const { formatMessage } = useIntl()
+  const search = props?.search ?? ''
+
   const { refetch, ...searchTasksQuery } = useQuery<
     SearchMasterdataResponse<T>,
     Error
   >({
-    queryKey: ['tasks'],
-    queryFn: apiRequestFactory({ url: BASE_URL }),
+    keepPreviousData: true,
+    queryKey: ['tasks', search],
+    queryFn: apiRequestFactory({ url: BASE_URL, query: { search } }),
   })
 
   const refetchAfterDelay = () => window.setTimeout(refetch, 500)

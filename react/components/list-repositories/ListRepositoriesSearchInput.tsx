@@ -18,7 +18,7 @@ export function ListRepositoriesSearchInput({ selected, loading }: Props) {
       label={formatMessage(messages.inputLabel)}
       placeholder={formatMessage(messages.inputPlaceholder)}
       size="regular"
-      button={formatMessage(messages.inputButtonLabel)}
+      button={formatMessage(messages.searchLabel)}
       defaultValue={selected}
       isLoading={loading}
       buttonProps={{ disabled: !selected }}

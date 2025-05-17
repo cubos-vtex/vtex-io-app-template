@@ -65,11 +65,15 @@ export class TaskMasterdataController extends BaseMasterdataController<Task> {
 
     const conditions = [`email=${storeUserEmail}`]
     const { search } = this.getQueryStringParams(['search'] as const)
-    const cleanSearch = search?.replace(/"/g, '')
+    const searchWithWildcards = search
+      ?.trim()
+      ?.replace(/["*]/g, '')
+      ?.split(/\s+/)
+      .join('*')
 
-    if (cleanSearch) {
+    if (searchWithWildcards) {
       conditions.push(
-        `(title="*${cleanSearch}*" OR description="*${cleanSearch}*")`
+        `(title="*${searchWithWildcards}*" OR description="*${searchWithWildcards}*")`
       )
     }
 

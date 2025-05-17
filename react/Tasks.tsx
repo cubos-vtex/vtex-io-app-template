@@ -1,11 +1,13 @@
-import React, { useRef } from 'react'
+import React, { useRef, useState } from 'react'
 import { useIntl } from 'react-intl'
+import { useRuntime } from 'vtex.render-runtime'
 import {
   Button,
   ButtonWithIcon,
   Card,
   IconDelete,
   Input,
+  InputSearch,
   Layout,
   PageBlock,
   PageHeader,
@@ -14,18 +16,24 @@ import {
 } from 'vtex.styleguide'
 
 import { AlertError } from './components/common'
-import { useToast } from './components/common/hooks'
+import { useDebounce, useToast } from './components/common/hooks'
 import { useTasks } from './components/tasks/hooks'
 import { withQueryClient } from './service'
 import messages from './utils/messages'
+
+const SEARCH_DELAY = 1500
 
 function Tasks() {
   const { formatMessage } = useIntl()
   const titleRef = useRef<HTMLInputElement>()
   const descriptionRef = useRef<HTMLTextAreaElement>()
   const { showToast } = useToast()
+  const { query, setQuery } = useRuntime()
+  const [inputSearch, setInputSearch] = useState(query?.search)
+  const searchDebounced = useDebounce(inputSearch, SEARCH_DELAY)
 
   const { searchTasksQuery, addTaskMutation, deleteTaskMutation } = useTasks({
+    search: searchDebounced,
     onAddTaskSuccess() {
       if (titleRef.current) titleRef.current.value = ''
       if (descriptionRef.current) descriptionRef.current.value = ''
@@ -44,11 +52,11 @@ function Tasks() {
     },
   })
 
-  const { error: searchError } = searchTasksQuery
-
   if (searchTasksQuery.isInitialLoading) {
     return <Layout pageHeader={<PageHeader title={<Spinner />} />} />
   }
+
+  const { error: searchError } = searchTasksQuery
 
   if (searchError?.message === messages.notAuthenticatedError.id) {
     return (
@@ -59,11 +67,13 @@ function Tasks() {
   }
 
   const disabled =
-    searchTasksQuery.isLoading ||
+    searchTasksQuery.isFetching ||
     addTaskMutation.isLoading ||
     deleteTaskMutation.isLoading
 
   const tasks = searchTasksQuery.data?.data
+  const hasTasks = !searchTasksQuery.isFetching && !!tasks?.length
+  const isEmpty = !searchTasksQuery.isFetching && !searchError && !tasks?.length
 
   const handleAddTask = () => {
     const title = titleRef.current?.value
@@ -77,6 +87,13 @@ function Tasks() {
   }
 
   const handleDeleteTask = (id: string) => deleteTaskMutation.mutate(id)
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newSearch = e.target.value
+
+    setInputSearch(newSearch)
+    setQuery({ search: newSearch || undefined })
+  }
 
   return (
     <Layout
@@ -112,16 +129,25 @@ function Tasks() {
           </Button>
         </div>
 
+        <div className="flex justify-center mb6">
+          <div className="w-100 w-50-m">
+            <InputSearch
+              size="small"
+              placeholder={formatMessage(messages.searchLabel)}
+              disabled={disabled}
+              value={inputSearch}
+              onChange={handleSearchChange}
+            />
+          </div>
+        </div>
+
         {searchError && <AlertError error={searchError} />}
 
-        {searchTasksQuery.isLoading && <Spinner />}
+        {searchTasksQuery.isFetching && <Spinner />}
 
-        {!searchTasksQuery.isLoading &&
-          !searchError &&
-          !tasks?.length &&
-          formatMessage(messages.tasksEmptyLabel)}
+        {isEmpty && formatMessage(messages.tasksEmptyLabel)}
 
-        {!searchTasksQuery.isLoading && !!tasks?.length && (
+        {hasTasks && (
           <div className="flex flex-wrap justify-center">
             {tasks.map((task) => (
               <a

@@ -16,13 +16,13 @@ export default defineMessages({
     id: 'admin/editor.list-repositories.props.default-org.description',
   },
 
-  // general error messages
+  // general messages
   notAuthenticatedError: { id: 'store/not-authenticated-error' },
+  searchLabel: { id: 'store/search.label' },
 
   // search input
   inputLabel: { id: 'store/list-repositories.input.label' },
   inputPlaceholder: { id: 'store/list-repositories.input.placeholder' },
-  inputButtonLabel: { id: 'store/list-repositories.input.button.label' },
 
   // list repositories
   listRepositoriesTitle: { id: 'store/list-repositories.title' },
