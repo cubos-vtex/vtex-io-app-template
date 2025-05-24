@@ -1,8 +1,9 @@
 import type { Maybe } from '@vtex/api'
-import { NotFoundError, UserInputError } from '@vtex/api'
+import { UserInputError } from '@vtex/api'
 import type { PaginationArgs } from '@vtex/clients/build/clients/masterData/MasterDataEntity'
 
 import { SCHEMA_VERSION } from '../../masterdata-setup'
+import { EntityNotFoundError } from '../../utils'
 import { BaseController } from './BaseController'
 
 const DEFAULT_PAGE = 1
@@ -37,13 +38,15 @@ export class BaseMasterdataController<
     })
 
     if (!entity) {
-      throw new NotFoundError(`Document not found in entity ${this.dataEntity}`)
+      throw new EntityNotFoundError(this.dataEntity)
     }
 
     return entity
   }
 
-  protected async createDocument(fields: T) {
+  protected async createDocument(
+    fields: Omit<T, keyof MasterdataInternalFields>
+  ) {
     const { DocumentId } = await this.masterdata.createDocument({
       ...this.commonArgs,
       fields,
@@ -75,6 +78,22 @@ export class BaseMasterdataController<
       where,
       sort,
     })
+  }
+
+  protected async getFirstResult(where?: string) {
+    const results = await this.masterdata.searchDocumentsWithPaginationInfo<T>({
+      ...this.commonArgs,
+      pagination: { page: 1, pageSize: 1 },
+      where,
+    })
+
+    const [firstResult] = results.data
+
+    if (!firstResult) {
+      throw new EntityNotFoundError(this.dataEntity)
+    }
+
+    return firstResult
   }
 
   protected getMasterdataSearchQuery() {

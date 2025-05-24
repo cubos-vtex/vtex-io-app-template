@@ -1,4 +1,5 @@
 export * from './checkSchemas'
+export * from './checkStoreUser'
 export * from './errors'
 export * from './handlers'
 export * from './setResponseMetadata'

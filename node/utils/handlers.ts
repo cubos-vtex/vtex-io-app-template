@@ -1,5 +1,9 @@
-import { checkSchemas, setResponseMetadata, setupControllers } from '.'
-import { checkStoreUser } from './checkStoreUser'
+import {
+  checkSchemas,
+  checkStoreUser,
+  setResponseMetadata,
+  setupControllers,
+} from '.'
 
 function generateHandler(handler: Handler) {
   return async function genericHandler(ctx: Context, next?: NextFn) {

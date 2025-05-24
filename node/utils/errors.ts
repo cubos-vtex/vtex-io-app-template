@@ -1,9 +1,22 @@
-import { AuthenticationError, ForbiddenError } from '@vtex/api'
+import { AuthenticationError, ForbiddenError, NotFoundError } from '@vtex/api'
 
-export function throwAuthenticationError(): never {
-  throw new AuthenticationError('store/not-authenticated-error')
+export class EntityNotFoundError extends NotFoundError {
+  constructor(entity: string) {
+    super(`Document not found in entity ${entity}`)
+    this.name = 'EntityNotFoundError'
+  }
 }
 
-export function throwForbiddenError(): never {
-  throw new ForbiddenError('store/forbidden-error')
+export class StoreAuthenticationError extends AuthenticationError {
+  constructor() {
+    super('store/not-authenticated-error')
+    this.name = 'StoreAuthenticationError'
+  }
+}
+
+export class StoreForbiddenError extends ForbiddenError {
+  constructor() {
+    super('store/forbidden-error')
+    this.name = 'EntityNotModifiedError'
+  }
 }

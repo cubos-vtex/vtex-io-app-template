@@ -19,34 +19,48 @@ const ERROR_RETRY_PATTERNS = ['unhealthy', 'genericerror', 'connection refused']
 const ERROR_MAX_RETRIES = 5
 
 /**
- * Creates a new instance of `QueryClient` with customized default options for queries.
+ * Determines whether a failed request should be retried based on the error and the number of failures.
  *
- * - `refetchOnWindowFocus`: Disabled to prevent automatic refetching when the window regains focus.
- * - `retry`: A custom retry logic that determines whether a failed query should be retried.
- *    - Logs the error message and failure count to the console.
- *    - Retries the query if the failure count is below `ERROR_MAX_RETRIES` and the error message
- *      matches any pattern in `ERROR_RETRY_PATTERNS`.
+ * Logs the error details to the console. Retries are allowed only if the failure count is less than
+ * `ERROR_MAX_RETRIES` and the error message matches any of the patterns specified in `ERROR_RETRY_PATTERNS`.
+ *
+ * @param failureCount - The number of times the request has failed so far.
+ * @param error - The error object thrown by the failed request.
+ * @returns `true` if the request should be retried, `false` otherwise.
+ */
+function retryFn(failureCount: number, error: unknown) {
+  if (!(error instanceof Error)) {
+    return false
+  }
+
+  console.error('Request Error:', {
+    errorMessage: error.message,
+    failureCount,
+  })
+
+  const shouldRetry =
+    failureCount < ERROR_MAX_RETRIES &&
+    ERROR_RETRY_PATTERNS.some((pattern) =>
+      error.message.toLowerCase().includes(pattern)
+    )
+
+  return shouldRetry
+}
+
+/**
+ * Initializes a new instance of QueryClient with custom default options.
+ *
+ * - Disables automatic refetching of queries when the window regains focus.
+ * - Sets a custom retry function (`retryFn`) for both queries and mutations to control retry behavior.
  */
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
-      retry: (failureCount, error) => {
-        const e = error as Error
-
-        console.error('Request Error:', {
-          errorMessage: e.message,
-          failureCount,
-        })
-
-        const shouldRetry =
-          failureCount < ERROR_MAX_RETRIES &&
-          ERROR_RETRY_PATTERNS.some((pattern) =>
-            e.message.toLowerCase().includes(pattern)
-          )
-
-        return shouldRetry
-      },
+      retry: retryFn,
+    },
+    mutations: {
+      retry: retryFn,
     },
   },
 })
@@ -142,7 +156,9 @@ export function apiRequestFactory<T>({
     .map(([key, value]) => `${key}=${value}`)
     .join('&')
 
-  const requestUrl = url.concat(url.includes('?') ? '&' : '?', queryParams)
+  const requestUrl = queryParams
+    ? url.concat(url.includes('?') ? '&' : '?', queryParams)
+    : url
 
   return async function apiRequest() {
     const response = await fetch(requestUrl, {

@@ -1,7 +1,7 @@
 import type { ParsedUrlQuery } from 'querystring'
 
 import type { InstanceOptions, IOContext } from '@vtex/api'
-import { ExternalClient } from '@vtex/api'
+import { ExternalClient, NotFoundError, TooManyRequestsError } from '@vtex/api'
 
 import { repositoriesConverter } from './transformers'
 
@@ -39,10 +39,12 @@ export class Github extends ExternalClient {
       .catch((e) => {
         switch (e.response?.status) {
           case 403:
-            throw new Error('GiHub API rate limit exceeded. Try again later.')
+            throw new TooManyRequestsError(
+              'GiHub API rate limit exceeded. Try again later.'
+            )
 
           case 404:
-            throw new Error(`Organization ${org} not found.`)
+            throw new NotFoundError(`Organization ${org} not found.`)
 
           default:
             throw e

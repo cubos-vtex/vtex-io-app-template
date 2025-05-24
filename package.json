@@ -4,13 +4,12 @@
   "scripts": {
     "lint": "eslint --ext js,jsx,ts,tsx .",
     "format": "prettier --write \"**/*.{ts,js,tsx,jsx,json,graphql,gql,md}\"",
-    "lint:locales": "intl-equalizer",
-    "postinstall": "yarn --cwd react && yarn --cwd node"
+    "lint:locales": "intl-equalizer"
   },
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "post-merge": "yarn"
+      "post-merge": "yarn && yarn --cwd react && yarn --cwd node"
     }
   },
   "intl-equalizer": {

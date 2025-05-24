@@ -1,8 +1,13 @@
-import { TASK_ENTITY, TASK_FIELDS } from '../masterdata-setup'
-import { throwForbiddenError } from '../utils'
+import { SCHEMAS, TASK_ENTITY, TASK_FIELDS } from '../masterdata-setup'
+import { StoreForbiddenError } from '../utils'
 import { BaseMasterdataController } from './base/BaseMasterdataController'
 
-const TASK_REQUIRED_FIELDS = ['title', 'description']
+// The email is required in the task masterdata entity schema, but
+// it will not be expected in the body of controller operations
+// because it is taken from the session.
+const TASK_REQUIRED_FIELDS = SCHEMAS.task.body.required.filter(
+  (field) => field !== 'email'
+)
 
 export class TaskMasterdataController extends BaseMasterdataController<Task> {
   constructor(ctx: Context) {
@@ -24,7 +29,7 @@ export class TaskMasterdataController extends BaseMasterdataController<Task> {
     const task = await this.getDocument(id)
 
     if (task.email !== storeUserEmail) {
-      throwForbiddenError()
+      throw new StoreForbiddenError()
     }
 
     return task
@@ -38,11 +43,11 @@ export class TaskMasterdataController extends BaseMasterdataController<Task> {
   }
 
   public async update() {
-    const task = await this.get()
+    const current = await this.get()
     const fields = await this.getTaskFields()
-    const newFields = { ...task, ...fields }
+    const newFields = { ...current, ...fields }
 
-    await this.updatePartialDocument(task.id, newFields)
+    await this.updatePartialDocument(current.id, newFields)
 
     return newFields
   }

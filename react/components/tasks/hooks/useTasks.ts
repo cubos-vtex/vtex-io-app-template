@@ -10,7 +10,7 @@ import type {
 } from '../../../typings'
 import { useToast } from '../../common/hooks'
 
-const BASE_URL = '/_v/my-super-app/tasks'
+const BASE_URL = '/_v/<APP_NAME>/tasks'
 
 type Props<T> = {
   search?: string
