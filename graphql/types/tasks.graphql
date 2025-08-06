@@ -1,0 +1,13 @@
+type Task {
+  id: ID!
+  createdIn: String!
+  lastInteractionIn: String!
+  email: String!
+  title: String!
+  description: String!
+}
+
+type TaskSearchResult {
+  data: [Task!]!
+  pagination: Pagination!
+}

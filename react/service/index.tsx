@@ -81,7 +81,7 @@ const queryClient = new QueryClient({
 export function withQueryClient<P, S>(Component: FC<P> & { schema?: S }) {
   const QueryClientWrappedComponent: typeof Component = (props) => (
     <QueryClientProvider client={queryClient}>
-      {<Component {...props} />}
+      <Component {...props} />
     </QueryClientProvider>
   )
 
@@ -156,9 +156,8 @@ export function apiRequestFactory<T>({
     .map(([key, value]) => `${key}=${value}`)
     .join('&')
 
-  const requestUrl = queryParams
-    ? url.concat(url.includes('?') ? '&' : '?', queryParams)
-    : url
+  const separator = url.includes('?') ? '&' : '?'
+  const requestUrl = queryParams ? url.concat(separator, queryParams) : url
 
   return async function apiRequest() {
     const response = await fetch(requestUrl, {

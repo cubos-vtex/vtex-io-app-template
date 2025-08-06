@@ -3,5 +3,33 @@ type Query {
     org: ID!
     sort: String
     direction: String
-  ): GitHubOrganizationRepositories @cacheControl(scope: PUBLIC, maxAge: SHORT)
+  ): GitHubOrganizationRepositories
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
+    @SetupControllers
+
+  task(id: ID!): Task
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
+    @CheckSchemas
+    @CheckStoreUser
+    @SetupControllers
+
+  tasks(input: SearchInput): TaskSearchResult!
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
+    @CheckSchemas
+    @CheckStoreUser
+    @SetupControllers
+}
+
+type Mutation {
+  deleteTask(id: ID!): Task
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
+    @CheckSchemas
+    @CheckStoreUser
+    @SetupControllers
+
+  saveTask(id: ID, title: String!, description: String!): Task!
+    @cacheControl(scope: PUBLIC, maxAge: SHORT)
+    @CheckSchemas
+    @CheckStoreUser
+    @SetupControllers
 }

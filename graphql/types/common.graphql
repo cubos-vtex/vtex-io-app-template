@@ -1,0 +1,22 @@
+directive @CheckSchemas on FIELD | FIELD_DEFINITION
+directive @CheckStoreUser on FIELD | FIELD_DEFINITION
+directive @SetupControllers on FIELD | FIELD_DEFINITION
+
+type Pagination {
+  total: Int
+  page: Int
+  pageSize: Int
+}
+
+enum SortDirection {
+  asc
+  desc
+}
+
+input SearchInput {
+  search: String
+  page: Int = 1
+  pageSize: Int = 15
+  sort: String = "createdIn"
+  direction: SortDirection = asc
+}

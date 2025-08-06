@@ -5,7 +5,7 @@ import { Button, Dropdown } from 'vtex.styleguide'
 import messages from '../../utils/messages'
 import { useListRepositoriesFilters } from './hooks'
 
-type Props = {
+type Props = Readonly<{
   loading: boolean
   filters: {
     sort: string
@@ -15,7 +15,7 @@ type Props = {
   inputDirection: string
   setInputSort: (sort: string) => void
   setInputDirection: (direction: string) => void
-}
+}>
 
 export function ListRepositoriesFilters({
   loading,

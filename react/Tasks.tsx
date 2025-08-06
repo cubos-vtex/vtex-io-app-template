@@ -22,6 +22,7 @@ import { withQueryClient } from './service'
 import messages from './utils/messages'
 
 const SEARCH_DELAY = 1500
+const UNDO_DELETE_DELAY = 10000
 
 function Tasks() {
   const { formatMessage } = useIntl()
@@ -43,7 +44,7 @@ function Tasks() {
         message: formatMessage(messages.tasksDeletedLabel, {
           title: <strong key={data.id}>{data.title}</strong>,
         }),
-        duration: 10000,
+        duration: UNDO_DELETE_DELAY,
         action: {
           label: formatMessage(messages.tasksUndoLabel),
           onClick: () => addTaskMutation.mutate(data),
@@ -66,13 +67,12 @@ function Tasks() {
     )
   }
 
-  const disabled =
+  const isLoading =
     searchTasksQuery.isFetching ||
     addTaskMutation.isLoading ||
     deleteTaskMutation.isLoading
 
   const tasks = searchTasksQuery.data?.data
-  const hasTasks = !searchTasksQuery.isFetching && !!tasks?.length
   const isEmpty = !searchTasksQuery.isFetching && !searchError && !tasks?.length
 
   const handleAddTask = () => {
@@ -105,7 +105,7 @@ function Tasks() {
             ref={titleRef}
             label={formatMessage(messages.tasksInputTitleLabel)}
             placeholder={formatMessage(messages.tasksInputTitlePlaceholder)}
-            disabled={disabled}
+            disabled={isLoading}
           />
         </div>
         <div className="mb4">
@@ -116,14 +116,14 @@ function Tasks() {
             placeholder={formatMessage(
               messages.tasksInputDescriptionPlaceholder
             )}
-            disabled={disabled}
+            disabled={isLoading}
           />
         </div>
         <div className="flex justify-center mb6">
           <Button
             onClick={handleAddTask}
-            isLoading={addTaskMutation.isLoading}
-            disabled={disabled}
+            isLoading={isLoading}
+            disabled={isLoading}
           >
             {formatMessage(messages.tasksButtonAddLabel)}
           </Button>
@@ -134,7 +134,7 @@ function Tasks() {
             <InputSearch
               size="small"
               placeholder={formatMessage(messages.searchLabel)}
-              disabled={disabled}
+              disabled={isLoading}
               value={inputSearch}
               onChange={handleSearchChange}
             />
@@ -143,59 +143,55 @@ function Tasks() {
 
         {searchError && <AlertError error={searchError} />}
 
-        {searchTasksQuery.isFetching && <Spinner />}
-
         {isEmpty && formatMessage(messages.tasksEmptyLabel)}
 
-        {hasTasks && (
-          <div className="flex flex-wrap justify-center">
-            {tasks.map((task) => (
-              <a
-                href={`#${task.id}`}
-                key={task.id}
-                className="bw2 br2 b--solid b--transparent hover-b--action-primary ma2 no-underline"
-                style={{
-                  width: 200,
-                  wordBreak: 'break-word',
-                }}
-              >
-                <Card>
-                  <div
-                    className="flex flex-column justify-center tc c-action-primary hover-c-action-primary relative"
-                    style={{ height: 140 }}
-                  >
-                    <span className="fw6">{task.title}</span>
-                    {!!task.description && (
-                      <div
-                        className="mt4 t-small c-on-base"
-                        style={{
-                          display: '-webkit-box',
-                          WebkitBoxOrient: 'vertical',
-                          WebkitLineClamp: '4',
-                          overflow: 'hidden',
-                        }}
-                      >
-                        {task.description}
-                      </div>
-                    )}
-                    <div className="absolute right--1 bottom--1">
-                      <ButtonWithIcon
-                        icon={<IconDelete />}
-                        size="small"
-                        variation="danger-tertiary"
-                        onClick={() => handleDeleteTask(task.id)}
-                        isLoading={
-                          deleteTaskMutation.isLoading &&
-                          deleteTaskMutation.variables === task.id
-                        }
-                      />
+        <div className="flex flex-wrap justify-center">
+          {tasks?.map((task) => (
+            <a
+              href={`#${task.id}`}
+              key={task.id}
+              className="bw2 br2 b--solid b--transparent hover-b--action-primary ma2 no-underline"
+              style={{
+                width: 200,
+                wordBreak: 'break-word',
+              }}
+            >
+              <Card>
+                <div
+                  className="flex flex-column justify-center tc c-action-primary hover-c-action-primary relative"
+                  style={{ height: 140 }}
+                >
+                  <span className="fw6">{task.title}</span>
+                  {!!task.description && (
+                    <div
+                      className="mt4 t-small c-on-base"
+                      style={{
+                        display: '-webkit-box',
+                        WebkitBoxOrient: 'vertical',
+                        WebkitLineClamp: '4',
+                        overflow: 'hidden',
+                      }}
+                    >
+                      {task.description}
                     </div>
+                  )}
+                  <div className="absolute right--1 bottom--1">
+                    <ButtonWithIcon
+                      icon={<IconDelete />}
+                      size="small"
+                      variation="danger-tertiary"
+                      onClick={() => handleDeleteTask(task.id)}
+                      isLoading={
+                        deleteTaskMutation.isLoading &&
+                        deleteTaskMutation.variables === task.id
+                      }
+                    />
                   </div>
-                </Card>
-              </a>
-            ))}
-          </div>
-        )}
+                </div>
+              </Card>
+            </a>
+          ))}
+        </div>
       </PageBlock>
     </Layout>
   )

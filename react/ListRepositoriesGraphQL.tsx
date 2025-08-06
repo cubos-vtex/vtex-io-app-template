@@ -17,16 +17,16 @@ import type {
 } from './typings'
 import messages from './utils/messages'
 
-type Props = {
+type Props = Readonly<{
   defaultOrg?: string
-}
+}>
 
 function ListRepositoriesGraphQL({ defaultOrg = '' }: Props) {
   const { formatMessage } = useIntl()
   const { DEFAULT_SORT, DEFAULT_DIRECTION } = useListRepositoriesFilters()
   const [selected, setSelected] = useState(defaultOrg)
   const [inputSort, setInputSort] = useState(DEFAULT_SORT)
-  const [inputDirection, setDirection] = useState(DEFAULT_DIRECTION)
+  const [inputDirection, setInputDirection] = useState(DEFAULT_DIRECTION)
   const [filters, setFilters] = useState({
     sort: DEFAULT_SORT,
     direction: DEFAULT_DIRECTION,
@@ -91,7 +91,7 @@ function ListRepositoriesGraphQL({ defaultOrg = '' }: Props) {
                 inputSort={inputSort}
                 inputDirection={inputDirection}
                 setInputSort={setInputSort}
-                setInputDirection={setDirection}
+                setInputDirection={setInputDirection}
               />
             )}
 

@@ -5,10 +5,10 @@ import { Link } from 'vtex.styleguide'
 import type { GitHubOrganization } from '../../typings'
 import messages from '../../utils/messages'
 
-type Props = {
+type Props = Readonly<{
   org: GitHubOrganization
   countRepositories: number
-}
+}>
 
 export function ListRepositoriesPageTitle({ org, countRepositories }: Props) {
   const { formatMessage } = useIntl()

@@ -14,9 +14,9 @@ import { apiRequestFactory, withQueryClient } from './service'
 import type { GitHubOrganizationRepositories } from './typings'
 import messages from './utils/messages'
 
-type Props = {
+type Props = Readonly<{
   defaultOrg?: string
-}
+}>
 
 function ListRepositories({ defaultOrg = '' }: Props) {
   const { formatMessage } = useIntl()

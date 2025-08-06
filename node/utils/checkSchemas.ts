@@ -9,12 +9,12 @@ export async function checkSchemas(ctx: Context, next?: NextFn) {
   }
 
   await Promise.all(
-    Object.values(SCHEMAS).map((schema) =>
+    Object.entries(SCHEMAS).map(([dataEntity, schemaBody]) =>
       ctx.clients.masterdata
         .createOrUpdateSchema({
-          dataEntity: schema.name,
+          dataEntity,
+          schemaBody,
           schemaName: SCHEMA_VERSION,
-          schemaBody: schema.body,
         })
         .catch((e) => {
           if (e.response.status !== 304) {

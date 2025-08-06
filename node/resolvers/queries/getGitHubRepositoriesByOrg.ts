@@ -3,10 +3,8 @@ export async function getGitHubRepositoriesByOrg(
   { org, sort = 'full_name', direction = 'asc' }: GetOrgRepositoriesArgs,
   ctx: Context
 ) {
-  const repositories = await ctx.clients.github.getRepositoriesByOrg(org, {
+  return ctx.clients.github.getRepositoriesByOrg(org, {
     sort,
     direction,
   })
-
-  return repositories
 }

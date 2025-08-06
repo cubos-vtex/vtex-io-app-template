@@ -24,6 +24,8 @@ declare global {
 
   type AppSettings = { schemaHash: string }
 
+  type GetById = { id: string }
+
   type Repository = {
     owner: {
       login: string
@@ -63,5 +65,17 @@ declare global {
     email: string
     title: string
     description: string
+  }
+
+  type SearchInput = Partial<{
+    search: string
+    page: number
+    pageSize: number
+    sort: string
+    direction: string
+  }>
+
+  type SaveTaskInput = Pick<Task, 'title' | 'description'> & {
+    id?: string
   }
 }

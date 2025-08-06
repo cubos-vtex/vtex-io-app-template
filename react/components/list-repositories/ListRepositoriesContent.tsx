@@ -3,9 +3,9 @@ import { Card } from 'vtex.styleguide'
 
 import type { GitHubRepository } from '../../typings'
 
-type Props = {
+type Props = Readonly<{
   repositories: GitHubRepository[]
-}
+}>
 
 export function ListRepositoriesContent({ repositories }: Props) {
   return (

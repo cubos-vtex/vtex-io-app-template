@@ -33,8 +33,6 @@ export function useTasks<T = Task>(props?: Props<T>) {
     queryFn: apiRequestFactory({ url: BASE_URL, query: { search } }),
   })
 
-  const refetchAfterDelay = () => window.setTimeout(refetch, 500)
-
   const onMutationError = useCallback(
     ({ message }: Error) => {
       showToast(formatMessage({ id: message, defaultMessage: message }))
@@ -55,7 +53,7 @@ export function useTasks<T = Task>(props?: Props<T>) {
       onError: onMutationError,
       onSuccess: (data) => {
         props?.onAddTaskSuccess?.(data)
-        refetchAfterDelay()
+        refetch()
       },
     }),
 
@@ -68,7 +66,7 @@ export function useTasks<T = Task>(props?: Props<T>) {
       onError: onMutationError,
       onSuccess: (data) => {
         props?.onDeleteTaskSuccess?.(data)
-        refetchAfterDelay()
+        refetch()
       },
     }),
   }

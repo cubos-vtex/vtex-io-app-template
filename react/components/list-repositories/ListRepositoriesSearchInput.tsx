@@ -4,10 +4,10 @@ import { InputButton } from 'vtex.styleguide'
 
 import messages from '../../utils/messages'
 
-type Props = {
+type Props = Readonly<{
   selected: string
   loading: boolean
-}
+}>
 
 export function ListRepositoriesSearchInput({ selected, loading }: Props) {
   const { formatMessage } = useIntl()

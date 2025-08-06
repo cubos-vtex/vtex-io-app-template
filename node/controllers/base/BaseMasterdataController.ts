@@ -6,8 +6,8 @@ import { SCHEMA_VERSION } from '../../masterdata-setup'
 import { EntityNotFoundError } from '../../utils'
 import { BaseController } from './BaseController'
 
-const DEFAULT_PAGE = 1
-const DEFAULT_PAGESIZE = 15
+export const DEFAULT_PAGE = 1
+export const DEFAULT_PAGESIZE = 15
 
 export class BaseMasterdataController<
   T extends MasterdataInternalFields
@@ -120,9 +120,11 @@ export class BaseMasterdataController<
     }
 
     return {
-      ...(sort && direction && { sort: `${sort} ${direction}` }),
+      sort,
+      direction,
       where,
-      pagination: { page: +page, pageSize: +pageSize },
+      page: +page,
+      pageSize: +pageSize,
     }
   }
 }
