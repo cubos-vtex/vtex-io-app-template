@@ -1,0 +1,5 @@
+{
+  "store.tasks-graphql": {
+    "children": ["tasks-graphql"]
+  }
+}

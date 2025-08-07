@@ -8,6 +8,9 @@
   "store.tasks": {
     "allowed": "*"
   },
+  "store.tasks-graphql": {
+    "allowed": "*"
+  },
   "list-repositories": {
     "component": "ListRepositories"
   },
@@ -16,5 +19,8 @@
   },
   "tasks": {
     "component": "Tasks"
+  },
+  "tasks-graphql": {
+    "component": "TasksGraphQL"
   }
 }

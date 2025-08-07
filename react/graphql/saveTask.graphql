@@ -1,0 +1,10 @@
+mutation SaveTask($id: ID, $title: String!, $description: String!) {
+  saveTask(id: $id, title: $title, description: $description) {
+    id
+    createdIn
+    lastInteractionIn
+    email
+    title
+    description
+  }
+}

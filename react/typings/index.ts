@@ -57,3 +57,31 @@ export type Task = {
 }
 
 export type InputTask = Pick<Task, 'title' | 'description'>
+
+export type GetTasksQuery = {
+  tasks: SearchMasterdataResponse<Task>
+}
+
+export type GetTasksArgs = {
+  input?: Partial<{
+    search: string
+    page: number
+    pageSize: number
+    sort: string
+    direction: string
+  }>
+}
+
+export type SaveTaskMutation = {
+  saveTask: Task
+}
+
+export type SaveTaskArgs = Pick<Task, 'title' | 'description'> & {
+  id?: string
+}
+
+export type DeleteTaskMutation = {
+  deleteTask: Task
+}
+
+export type DeleteTaskArgs = Pick<Task, 'id'>

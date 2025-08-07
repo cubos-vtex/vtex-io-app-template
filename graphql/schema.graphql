@@ -7,28 +7,18 @@ type Query {
     @cacheControl(scope: PUBLIC, maxAge: SHORT)
     @SetupControllers
 
-  task(id: ID!): Task
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @CheckSchemas
-    @CheckStoreUser
-    @SetupControllers
+  task(id: ID!): Task @CheckSchemas @CheckStoreUser @SetupControllers
 
   tasks(input: SearchInput): TaskSearchResult!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
     @CheckSchemas
     @CheckStoreUser
     @SetupControllers
 }
 
 type Mutation {
-  deleteTask(id: ID!): Task
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
-    @CheckSchemas
-    @CheckStoreUser
-    @SetupControllers
+  deleteTask(id: ID!): Task @CheckSchemas @CheckStoreUser @SetupControllers
 
   saveTask(id: ID, title: String!, description: String!): Task!
-    @cacheControl(scope: PUBLIC, maxAge: SHORT)
     @CheckSchemas
     @CheckStoreUser
     @SetupControllers

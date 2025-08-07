@@ -1,0 +1,17 @@
+query GetTasks($input: SearchInput) {
+  tasks(input: $input) {
+    data {
+      id
+      createdIn
+      lastInteractionIn
+      email
+      title
+      description
+    }
+    pagination {
+      total
+      page
+      pageSize
+    }
+  }
+}
