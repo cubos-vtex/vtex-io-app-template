@@ -1,8 +1,8 @@
-📢 Use this project, [contribute](https://github.com/cubos-vtex/<APP_NAME>) to it or open issues to help evolve it using [repository issues](https://github.com/cubos-vtex/<APP_NAME>/issues).
+📢 Use this project, [contribute](<APP_REPOSITORY_URL>/) to it or open issues to help evolve it using [repository issues](<APP_REPOSITORY_URL>/issues).
 
 # <APP_TITLE>
 
-[![Publish and Deploy App](https://github.com/cubos-vtex/<APP_NAME>/actions/workflows/publish-and-deploy.yml/badge.svg)](https://github.com/cubos-vtex/<APP_NAME>/actions/workflows/publish-and-deploy.yml)
+[![Publish and Deploy App](<APP_REPOSITORY_URL>/actions/workflows/publish-and-deploy.yml/badge.svg)](<APP_REPOSITORY_URL>/actions/workflows/publish-and-deploy.yml)
 
 <!-- DOCS-IGNORE:start -->
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
@@ -16,7 +16,7 @@
 
 ## How to install
 
-To use the **<APP_TITLE>** in your store, install the app using the following command in the VTEX terminal:
+To use the **<APP_TITLE>** in your store, install the app using the following [VTEX Toolbelt](https://github.com/vtex/toolbelt) command in the terminal:
 
 ```shell
 vtex install <APP_VENDOR>.<APP_NAME>@0.x
