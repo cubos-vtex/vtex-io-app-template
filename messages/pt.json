@@ -6,6 +6,7 @@
 
   "store/not-authenticated-error": "Você precisa estar autenticado",
   "store/search.label": "Buscar",
+  "store/cancel.label": "Cancelar",
 
   "store/list-repositories.input.label": "Pesquise por uma conta de organização do GitHub para listar seus repositórios",
   "store/list-repositories.input.placeholder": "Insira uma conta de organização do GitHub",
@@ -27,6 +28,7 @@
   "store/tasks.input.description.label": "Descrição",
   "store/tasks.input.description.placeholder": "Escreva uma descrição para a tarefa",
   "store/tasks.button.add.label": "Adicionar tarefa",
+  "store/tasks.button.update.label": "Atualizar tarefa",
   "store/tasks.empty.label": "Nenhuma tarefa encontrada",
   "store/tasks.required.label": "Título e descrição são obrigatórios",
   "store/tasks.deleted.label": "A tarefa {title} foi excluída",

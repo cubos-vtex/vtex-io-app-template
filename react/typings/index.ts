@@ -56,8 +56,6 @@ export type Task = {
   description: string
 }
 
-export type InputTask = Pick<Task, 'title' | 'description'>
-
 export type GetTasksQuery = {
   tasks: SearchMasterdataResponse<Task>
 }
@@ -72,6 +70,12 @@ export type GetTasksArgs = {
   }>
 }
 
+export type GetTaskQuery = {
+  task: Task
+}
+
+export type GetTaskArgs = Pick<Task, 'id'>
+
 export type SaveTaskMutation = {
   saveTask: Task
 }
@@ -83,5 +87,3 @@ export type SaveTaskArgs = Pick<Task, 'title' | 'description'> & {
 export type DeleteTaskMutation = {
   deleteTask: Task
 }
-
-export type DeleteTaskArgs = Pick<Task, 'id'>

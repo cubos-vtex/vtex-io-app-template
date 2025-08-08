@@ -21,8 +21,8 @@ import { useTasks } from './components/tasks/hooks'
 import { withQueryClient } from './service'
 import messages from './utils/messages'
 
-const SEARCH_DELAY = 1500
-const UNDO_DELETE_DELAY = 10000
+const SEARCH_TIMEOUT = 1500
+const UNDO_DELETE_TIMEOUT = 10000
 
 function Tasks() {
   const { formatMessage } = useIntl()
@@ -31,20 +31,42 @@ function Tasks() {
   const { showToast } = useToast()
   const { query, setQuery } = useRuntime()
   const [inputSearch, setInputSearch] = useState(query?.search)
-  const searchDebounced = useDebounce(inputSearch, SEARCH_DELAY)
+  const searchDebounced = useDebounce(inputSearch, SEARCH_TIMEOUT)
+  const taskId = query?.id
 
-  const { searchTasksQuery, addTaskMutation, deleteTaskMutation } = useTasks({
+  const clearTaskForm = () => {
+    setQuery({ ...query, id: undefined })
+
+    if (titleRef.current && descriptionRef.current) {
+      titleRef.current.value = ''
+      descriptionRef.current.value = ''
+    }
+  }
+
+  const {
+    searchTasksQuery,
+    getTaskQuery,
+    addTaskMutation,
+    updateTaskMutation,
+    deleteTaskMutation,
+  } = useTasks({
+    taskId,
     search: searchDebounced,
-    onAddTaskSuccess() {
-      if (titleRef.current) titleRef.current.value = ''
-      if (descriptionRef.current) descriptionRef.current.value = ''
+    onAddTaskSuccess: clearTaskForm,
+    onGetTaskSuccess(data) {
+      if (titleRef.current && descriptionRef.current) {
+        titleRef.current.value = data.title
+        descriptionRef.current.value = data.description
+      }
     },
     onDeleteTaskSuccess(data) {
+      clearTaskForm()
+
       showToast({
         message: formatMessage(messages.tasksDeletedLabel, {
           title: <strong key={data.id}>{data.title}</strong>,
         }),
-        duration: UNDO_DELETE_DELAY,
+        duration: UNDO_DELETE_TIMEOUT,
         action: {
           label: formatMessage(messages.tasksUndoLabel),
           onClick: () => addTaskMutation.mutate(data),
@@ -52,6 +74,8 @@ function Tasks() {
       })
     },
   })
+
+  const currentTask = getTaskQuery.data
 
   if (searchTasksQuery.isInitialLoading) {
     return <Layout pageHeader={<PageHeader title={<Spinner />} />} />
@@ -68,25 +92,41 @@ function Tasks() {
   }
 
   const isLoading =
+    (taskId && getTaskQuery.isLoading) ||
     searchTasksQuery.isFetching ||
     addTaskMutation.isLoading ||
+    updateTaskMutation.isLoading ||
     deleteTaskMutation.isLoading
 
   const tasks = searchTasksQuery.data?.data
   const isEmpty = !searchTasksQuery.isFetching && !searchError && !tasks?.length
 
-  const handleAddTask = () => {
+  const handleSaveTask = () => {
     const title = titleRef.current?.value
     const description = descriptionRef.current?.value
 
     if (title && description) {
-      addTaskMutation.mutate({ title, description })
+      if (currentTask) {
+        updateTaskMutation.mutate({ id: currentTask.id, title, description })
+      } else {
+        addTaskMutation.mutate({ title, description })
+      }
     } else {
       showToast(formatMessage(messages.tasksRequiredLabel))
     }
   }
 
-  const handleDeleteTask = (id: string) => deleteTaskMutation.mutate(id)
+  const handleClickTask = (e: React.MouseEvent, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setQuery({ ...query, id })
+  }
+
+  const handleDeleteTask = (e: React.MouseEvent, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    deleteTaskMutation.mutate(id)
+  }
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearch = e.target.value
@@ -121,12 +161,25 @@ function Tasks() {
         </div>
         <div className="flex justify-center mb6">
           <Button
-            onClick={handleAddTask}
+            onClick={handleSaveTask}
             isLoading={isLoading}
             disabled={isLoading}
           >
-            {formatMessage(messages.tasksButtonAddLabel)}
+            {currentTask
+              ? formatMessage(messages.tasksButtonUpdateLabel)
+              : formatMessage(messages.tasksButtonAddLabel)}
           </Button>
+          {currentTask && (
+            <div className="ml4">
+              <Button
+                variation="secondary"
+                onClick={clearTaskForm}
+                disabled={isLoading}
+              >
+                {formatMessage(messages.cancelLabel)}
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center mb6">
@@ -148,9 +201,14 @@ function Tasks() {
         <div className="flex flex-wrap justify-center">
           {tasks?.map((task) => (
             <a
-              href={`#${task.id}`}
+              href={`?id=${task.id}`}
+              onClick={(e: React.MouseEvent) => handleClickTask(e, task.id)}
               key={task.id}
-              className="bw2 br2 b--solid b--transparent hover-b--action-primary ma2 no-underline"
+              className={`bw2 br2 b--solid ma2 no-underline ${
+                currentTask?.id === task.id
+                  ? 'b--action-primary'
+                  : 'b--transparent hover-b--muted-3'
+              }`}
               style={{
                 width: 200,
                 wordBreak: 'break-word',
@@ -180,7 +238,9 @@ function Tasks() {
                       icon={<IconDelete />}
                       size="small"
                       variation="danger-tertiary"
-                      onClick={() => handleDeleteTask(task.id)}
+                      onClick={(e: React.MouseEvent) =>
+                        handleDeleteTask(e, task.id)
+                      }
                       isLoading={
                         deleteTaskMutation.isLoading &&
                         deleteTaskMutation.variables === task.id

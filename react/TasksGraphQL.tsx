@@ -20,12 +20,14 @@ import {
 import { AlertError } from './components/common'
 import { useDebounce, useToast } from './components/common/hooks'
 import DELETE_TASK_MUTATION from './graphql/deleteTask.graphql'
+import TASK_QUERY from './graphql/getTask.graphql'
 import TASKS_QUERY from './graphql/getTasks.graphql'
 import SAVE_TASK_MUTATION from './graphql/saveTask.graphql'
 import { withQueryClient } from './service'
 import type {
-  DeleteTaskArgs,
   DeleteTaskMutation,
+  GetTaskArgs,
+  GetTaskQuery,
   GetTasksArgs,
   GetTasksQuery,
   SaveTaskArgs,
@@ -33,8 +35,8 @@ import type {
 } from './typings'
 import messages from './utils/messages'
 
-const SEARCH_DELAY = 1500
-const UNDO_DELETE_DELAY = 10000
+const SEARCH_TIMEOUT = 1500
+const UNDO_DELETE_TIMEOUT = 10000
 
 function Tasks() {
   const { formatMessage } = useIntl()
@@ -43,8 +45,38 @@ function Tasks() {
   const { showToast } = useToast()
   const { query, setQuery } = useRuntime()
   const [inputSearch, setInputSearch] = useState(query?.search)
-  const searchDebounced = useDebounce(inputSearch, SEARCH_DELAY)
+  const searchDebounced = useDebounce(inputSearch, SEARCH_TIMEOUT)
   const [deletingTask, setDeletingTask] = useState<string | undefined>()
+  const taskId = query?.id
+
+  const {
+    data: getTaskData,
+    loading: taskLoading,
+    error: taskError,
+  } = useQuery<GetTaskQuery, GetTaskArgs>(TASK_QUERY, {
+    fetchPolicy: 'cache-and-network',
+    skip: !titleRef.current || !descriptionRef.current || !taskId,
+    ssr: false,
+    variables: { id: taskId as string },
+    onCompleted({ task }) {
+      if (titleRef.current && descriptionRef.current) {
+        titleRef.current.value = task.title
+        descriptionRef.current.value = task.description
+      }
+    },
+  })
+
+  const currentTask = getTaskData?.task
+
+  const clearTaskForm = () => {
+    setQuery({ ...query, id: undefined })
+    setDeletingTask(undefined)
+
+    if (titleRef.current && descriptionRef.current) {
+      titleRef.current.value = ''
+      descriptionRef.current.value = ''
+    }
+  }
 
   const {
     data,
@@ -64,24 +96,22 @@ function Tasks() {
     SaveTaskArgs
   >(SAVE_TASK_MUTATION, {
     refetchQueries: ['GetTasks'],
-    onCompleted() {
-      setDeletingTask(undefined)
-      if (titleRef.current) titleRef.current.value = ''
-      if (descriptionRef.current) descriptionRef.current.value = ''
-    },
+    onCompleted: clearTaskForm,
   })
 
   const [deleteTask, { loading: deleteLoading }] = useMutation<
     DeleteTaskMutation,
-    DeleteTaskArgs
+    GetTaskArgs
   >(DELETE_TASK_MUTATION, {
     refetchQueries: ['GetTasks'],
     onCompleted({ deleteTask: { id, title, description } }) {
+      clearTaskForm()
+
       showToast({
         message: formatMessage(messages.tasksDeletedLabel, {
           title: <strong key={id}>{title}</strong>,
         }),
-        duration: UNDO_DELETE_DELAY,
+        duration: UNDO_DELETE_TIMEOUT,
         action: {
           label: formatMessage(messages.tasksUndoLabel),
           onClick: () => {
@@ -98,30 +128,43 @@ function Tasks() {
     return <Layout pageHeader={<PageHeader title={<Spinner />} />} />
   }
 
-  if (searchError?.message === messages.notAuthenticatedError.id) {
+  const error = searchError ?? taskError
+  const errorMessage = error?.graphQLErrors?.[0]?.message
+
+  if (errorMessage === messages.notAuthenticatedError.id) {
     return (
       <Layout
-        pageHeader={<PageHeader title={<AlertError error={searchError} />} />}
+        pageHeader={
+          <PageHeader title={<AlertError error={new Error(errorMessage)} />} />
+        }
       />
     )
   }
 
-  const isLoading = searchLoading || saveLoading || deleteLoading
+  const isLoading = taskLoading || searchLoading || saveLoading || deleteLoading
   const tasks = data?.tasks.data
   const isEmpty = !searchLoading && !searchError && !tasks?.length
 
-  const handleAddTask = () => {
+  const handleSaveTask = () => {
     const title = titleRef.current?.value
     const description = descriptionRef.current?.value
 
     if (title && description) {
-      saveTask({ variables: { title, description } })
+      saveTask({ variables: { id: currentTask?.id, title, description } })
     } else {
       showToast(formatMessage(messages.tasksRequiredLabel))
     }
   }
 
-  const handleDeleteTask = (id: string) => {
+  const handleClickTask = (e: React.MouseEvent, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setQuery({ ...query, id })
+  }
+
+  const handleDeleteTask = (e: React.MouseEvent, id: string) => {
+    e.preventDefault()
+    e.stopPropagation()
     setDeletingTask(id)
     deleteTask({ variables: { id } })
   }
@@ -130,7 +173,7 @@ function Tasks() {
     const newSearch = e.target.value
 
     setInputSearch(newSearch)
-    setQuery({ search: newSearch || undefined })
+    setQuery({ ...query, search: newSearch || undefined })
   }
 
   const handleSearchSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -167,12 +210,25 @@ function Tasks() {
         </div>
         <div className="flex justify-center mb6">
           <Button
-            onClick={handleAddTask}
+            onClick={handleSaveTask}
             isLoading={isLoading}
             disabled={isLoading}
           >
-            {formatMessage(messages.tasksButtonAddLabel)}
+            {currentTask
+              ? formatMessage(messages.tasksButtonUpdateLabel)
+              : formatMessage(messages.tasksButtonAddLabel)}
           </Button>
+          {currentTask && (
+            <div className="ml4">
+              <Button
+                variation="secondary"
+                onClick={clearTaskForm}
+                disabled={isLoading}
+              >
+                {formatMessage(messages.cancelLabel)}
+              </Button>
+            </div>
+          )}
         </div>
 
         <div className="flex justify-center mb6">
@@ -189,16 +245,21 @@ function Tasks() {
           </div>
         </div>
 
-        {searchError && <AlertError error={searchError} />}
+        {error && <AlertError error={error} />}
 
         {isEmpty && formatMessage(messages.tasksEmptyLabel)}
 
         <div className="flex flex-wrap justify-center">
           {tasks?.map((task) => (
             <a
-              href={`#${task.id}`}
+              href={`?id=${task.id}`}
+              onClick={(e: React.MouseEvent) => handleClickTask(e, task.id)}
               key={task.id}
-              className="bw2 br2 b--solid b--transparent hover-b--action-primary ma2 no-underline"
+              className={`bw2 br2 b--solid ma2 no-underline ${
+                currentTask?.id === task.id
+                  ? 'b--action-primary'
+                  : 'b--transparent hover-b--muted-3'
+              }`}
               style={{
                 width: 200,
                 wordBreak: 'break-word',
@@ -228,7 +289,9 @@ function Tasks() {
                       icon={<IconDelete />}
                       size="small"
                       variation="danger-tertiary"
-                      onClick={() => handleDeleteTask(task.id)}
+                      onClick={(e: React.MouseEvent) =>
+                        handleDeleteTask(e, task.id)
+                      }
                       isLoading={deleteLoading && deletingTask === task.id}
                     />
                   </div>

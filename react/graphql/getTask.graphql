@@ -1,0 +1,10 @@
+query GetTask($id: ID!) {
+  task(id: $id) {
+    id
+    createdIn
+    lastInteractionIn
+    email
+    title
+    description
+  }
+}

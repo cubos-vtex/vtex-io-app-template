@@ -6,6 +6,7 @@
 
   "store/not-authenticated-error": "You need to be authenticated",
   "store/search.label": "Search",
+  "store/cancel.label": "Cancel",
 
   "store/list-repositories.input.label": "Search for a GitHub organization account to list its repositories",
   "store/list-repositories.input.placeholder": "Insert a GitHub organization account",
@@ -27,6 +28,7 @@
   "store/tasks.input.description.label": "Description",
   "store/tasks.input.description.placeholder": "Write a description for the task",
   "store/tasks.button.add.label": "Add task",
+  "store/tasks.button.update.label": "Update task",
   "store/tasks.empty.label": "No tasks found",
   "store/tasks.required.label": "Title and description are required",
   "store/tasks.deleted.label": "The task {title} was deleted",

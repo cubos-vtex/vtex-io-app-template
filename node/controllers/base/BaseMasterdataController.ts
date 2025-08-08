@@ -52,7 +52,26 @@ export class BaseMasterdataController<
       fields,
     })
 
-    return this.getDocument(DocumentId)
+    /*
+     * Attempts to verify recursively the creation of a document by fetching
+     * the first result with the specified `DocumentId` because MasterData
+     * sometimes does not immediately index the created document.
+     */
+    let createdDocument: Maybe<T>
+
+    const verifyCreatedDocument = async () => {
+      createdDocument = await this.getFirstResult(`id=${DocumentId}`).catch(
+        () => null
+      )
+
+      if (!createdDocument) {
+        await verifyCreatedDocument()
+      }
+    }
+
+    await verifyCreatedDocument()
+
+    return createdDocument as T
   }
 
   protected async updatePartialDocument(id: string, fields: Partial<T>) {

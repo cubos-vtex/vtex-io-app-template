@@ -19,6 +19,7 @@ export default defineMessages({
   // general messages
   notAuthenticatedError: { id: 'store/not-authenticated-error' },
   searchLabel: { id: 'store/search.label' },
+  cancelLabel: { id: 'store/cancel.label' },
 
   // search input
   inputLabel: { id: 'store/list-repositories.input.label' },
@@ -54,6 +55,7 @@ export default defineMessages({
     id: 'store/tasks.input.description.placeholder',
   },
   tasksButtonAddLabel: { id: 'store/tasks.button.add.label' },
+  tasksButtonUpdateLabel: { id: 'store/tasks.button.update.label' },
   tasksEmptyLabel: { id: 'store/tasks.empty.label' },
   tasksRequiredLabel: { id: 'store/tasks.required.label' },
   tasksDeletedLabel: { id: 'store/tasks.deleted.label' },
