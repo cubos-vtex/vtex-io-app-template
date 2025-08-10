@@ -1,6 +1,6 @@
 {
-  "projectName": "",
-  "projectOwner": "",
+  "projectName": "<APP_NAME>",
+  "projectOwner": "<APP_REPOSITORY_OWNER>",
   "repoType": "github",
   "repoHost": "https://github.com",
   "files": [
